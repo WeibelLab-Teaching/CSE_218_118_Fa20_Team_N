@@ -9,13 +9,16 @@ var createScene = function() {
     var scene = new BABYLON.Scene(engine);
 
     // This creates and positions a free camera (non-mesh)
-    var camera = new BABYLON.FreeCamera("camera1", new BABYLON.Vector3(0, 5, -10), scene);
+    var camera = new BABYLON.FreeCamera("camera1", new BABYLON.Vector3(0, 25, -50), scene);
 
     // This targets the camera to scene origin
     camera.setTarget(BABYLON.Vector3.Zero());
 
     // This attaches the camera to the canvas
     camera.attachControl(canvas, true);
+
+    // Set camera speed
+    camera.speed = 0.5;
 
     // This creates a light, aiming 0,1,0 - to the sky (non-mesh)
     var light = new BABYLON.HemisphericLight("light", new BABYLON.Vector3(0, 1, 0), scene);
@@ -25,11 +28,37 @@ var createScene = function() {
 
     //import maze from github, and add to scene
     var baseURL = "https://raw.githubusercontent.com/WeibelLab-Teaching/CSE_218_118_Fa20_Team_N/j-dev/src/assets/";
-    var cm = "corn-maze-g.glb";
+    var cm = "thinMaze.glb";
     BABYLON.SceneLoader.ImportMesh("", baseURL, cm, scene );
     // Our built-in 'ground' shape.
-    var ground = BABYLON.MeshBuilder.CreateGround("ground", { width: 6, height: 6 }, scene);
+    var ground = BABYLON.MeshBuilder.CreateGround("ground", { width: 100, height: 100 }, scene);
 
+    // Skybox
+    var skybox = BABYLON.MeshBuilder.CreateBox("skyBox", {size:1000.0}, scene);
+    var skyboxMaterial = new BABYLON.StandardMaterial("skyBox", scene);
+    skyboxMaterial.backFaceCulling = false;
+    var skyBoxURL = baseURL + "/nebula/nebula";
+    skyboxMaterial.reflectionTexture = new BABYLON.CubeTexture(skyBoxURL, scene);
+    skyboxMaterial.reflectionTexture.coordinatesMode = BABYLON.Texture.SKYBOX_MODE;
+    skyboxMaterial.diffuseColor = new BABYLON.Color3(0, 0, 0);
+    skyboxMaterial.specularColor = new BABYLON.Color3(0, 0, 0);
+    skybox.material = skyboxMaterial;
+
+    // Gravity
+    scene.gravity = new BABYLON.Vector3(0, -9.81, 0);
+    // camera.applyGravity = true;
+    
+    // camera collision hitbox
+    camera.ellipsoid = new BABYLON.Vector3(1, 3, 1);
+
+    // Enable collisions
+    scene.collisionsEnabled = true;
+    camera.checkCollisions = true;
+    ground.checkCollisions = true;
+
+    
+
+    
     return scene;
 };
 var engine;
