@@ -39,7 +39,7 @@ light.intensity = 0.7;
 //import maze from github, and add to scene
 var baseURL =  "https://raw.githubusercontent.com/WeibelLab-Teaching/CSE_218_118_Fa20_Team_N/main/server/src/assets/";
 var mazeName = "thinMaze.glb";
-BABYLON.SceneLoader.ImportMesh("", baseURL, mazeName, scene);
+BABYLON.SceneLoader.ImportMesh("", baseURL, "mazes/"+ mazeName, scene);
 
 // Our built-in 'ground' shape. Params: name, width, depth, subdivs, scene
 var ground = BABYLON.Mesh.CreateGround("ground1", 100, 100, 2, scene);
