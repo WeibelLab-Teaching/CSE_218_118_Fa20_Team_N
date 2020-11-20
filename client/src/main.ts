@@ -64,7 +64,7 @@ client.joinOrCreate<StateHandler>("game").then(room => {
 
     room.state.players.onAdd = function(player, key) {
         
-        BABYLON.SceneLoader.ImportMesh("", baseURL + "players/", "arissa.babylon", scene, 
+        BABYLON.SceneLoader.ImportMesh("him", baseURL + "players/", "Dude.babylon", scene, 
             function (newMeshes, particleSystems, skeletons) {
                 playerViews[key] = newMeshes[0];
                 console.log(newMeshes)
