@@ -38,8 +38,8 @@ light.intensity = 0.7;
 
 //import maze from github, and add to scene
 var baseURL =  "https://raw.githubusercontent.com/WeibelLab-Teaching/CSE_218_118_Fa20_Team_N/main/server/src/assets/";
-var mazeName = "thinMaze.glb";
-BABYLON.SceneLoader.ImportMesh("", baseURL, mazeName, scene);
+var mazeFile = "thinMaze.glb";
+BABYLON.SceneLoader.ImportMesh("", baseURL, mazeFile, scene);
 
 // Our built-in 'ground' shape. Params: name, width, depth, subdivs, scene
 var ground = BABYLON.Mesh.CreateGround("ground1", 100, 100, 2, scene);
@@ -60,22 +60,39 @@ skybox.material = skyboxMaterial;
 
 // Colyseus / Join Room
 client.joinOrCreate<StateHandler>("game").then(room => {
-    const playerViews: {[id: string]: BABYLON.Mesh} = {};
+    const playerViews: {[id: string]: BABYLON.AbstractMesh} = {};
 
     room.state.players.onAdd = function(player, key) {
+        
+        BABYLON.SceneLoader.ImportMesh("", baseURL + "players/", "arissa.babylon", scene, 
+            function (newMeshes, particleSystems, skeletons) {
+                playerViews[key] = newMeshes[0];
+                console.log(newMeshes)
+                if (playerViews[key] != null) {
+                    
+                    playerViews[key].rotation.y = Math.PI;
+                    playerViews[key].position = new BABYLON.Vector3(0, 0, -80);
+                }
+                
+            }
+        );
+        
         // Our built-in 'sphere' shape. Params: name, subdivs, size, scene
         // playerViews[key] = BABYLON.Mesh.CreateSphere("sphere1", 16, 2, scene);
-        playerViews[key] = BABYLON.Mesh.CreateBox("box1", 1, scene);
-        playerViews[key].scaling.set(0.3, 1, 0.3);
+        // playerViews[key] = BABYLON.Mesh.CreateBox("box1", 1, scene);
+        // playerViews[key].scaling.set(0.3, 1, 0.3);
 
         // Move the sphere upward 1/2 its height
-        playerViews[key].position.set(player.position.x, player.position.y, player.position.z);
-        playerViews[key].rotation.set(0, 0, 0);
+        // playerViews[key].position.set(player.position.x, player.position.y, player.position.z);
+        // playerViews[key].rotation.set(0, 0, 0);
 
         // Update player position based on changes from the server.
         player.position.onChange = () => {
-            playerViews[key].position.set(player.position.x, player.position.y, player.position.z);
-            playerViews[key].rotation.set(0, player.position.heading, 0);
+            if (playerViews[key] != null) {
+                playerViews[key].position.set(player.position.x, player.position.y, player.position.z);
+                playerViews[key].rotation.set(0, player.position.heading, 0);
+            }
+            
             if (key === room.sessionId) {
                 var dist = 1;
                 var x = player.position.x + dist * Math.sin(player.position.heading);
@@ -86,7 +103,7 @@ client.joinOrCreate<StateHandler>("game").then(room => {
         };
 
         // Set camera to follow current player
-        if (key === room.sessionId) {
+        if (key === room.sessionId && playerViews[key] != null) {
             camera.setTarget(playerViews[key].position);
         }
     };
