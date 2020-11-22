@@ -63,20 +63,20 @@ client.joinOrCreate<StateHandler>("game").then(room => {
     const playerViews: {[id: string]: BABYLON.AbstractMesh} = {};
 
     room.state.players.onAdd = function(player, key) {
-        
-        BABYLON.SceneLoader.ImportMesh("him", baseURL + "players/", "Dude.babylon", scene, 
+
+        BABYLON.SceneLoader.ImportMesh("him", baseURL + "players/", "Dude.babylon", scene,
             function (newMeshes, particleSystems, skeletons) {
                 playerViews[key] = newMeshes[0];
                 console.log(newMeshes)
                 if (playerViews[key] != null) {
-                    
+
                     playerViews[key].rotation.y = Math.PI;
                     playerViews[key].position = new BABYLON.Vector3(0, 0, -80);
                 }
-                
+
             }
         );
-        
+
         // Our built-in 'sphere' shape. Params: name, subdivs, size, scene
         // playerViews[key] = BABYLON.Mesh.CreateSphere("sphere1", 16, 2, scene);
         // playerViews[key] = BABYLON.Mesh.CreateBox("box1", 1, scene);
@@ -92,9 +92,9 @@ client.joinOrCreate<StateHandler>("game").then(room => {
                 playerViews[key].position.set(player.position.x, player.position.y, player.position.z);
                 playerViews[key].rotation.set(0, player.position.heading, 0);
             }
-            
+
             if (key === room.sessionId) {
-                var dist = 1;
+                var dist = 0.1;
                 var x = player.position.x + dist * Math.sin(player.position.heading);
                 var z = player.position.z + dist * Math.cos(player.position.heading);
                 camera.position.set(x, player.position.y + 0.5, z);
