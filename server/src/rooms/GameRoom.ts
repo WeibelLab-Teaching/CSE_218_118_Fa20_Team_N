@@ -18,11 +18,11 @@ export class GameRoom extends Room<StateHandler> {
     onJoin (client) {
         const player = new Player();
         player.name = `Player ${ this.clients.length }`;
-        player.position.x = Math.random();
-        player.position.y = 5;
-        player.position.z = Math.random();
+        player.position.x = 5; // Math.random();
+        player.position.y = 0;
+        player.position.z = 5; // Math.random();
         player.position.heading = 0;
-
+        player.animation = null;
         this.state.players.set(client.sessionId, player);
     }
 
@@ -31,6 +31,7 @@ export class GameRoom extends Room<StateHandler> {
             player.position.x += Math.sin(player.position.heading) * player.pressedKeys.move * 0.1;
             player.position.z += Math.cos(player.position.heading) * player.pressedKeys.move * 0.1;
             player.position.heading += player.pressedKeys.spin * 0.03;
+            player.animation = player.pressedKeys.animate;
         });
     }
 

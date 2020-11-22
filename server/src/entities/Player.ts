@@ -3,6 +3,7 @@ import { Schema, type } from "@colyseus/schema";
 export interface PressedKeys {
     spin: number;
     move: number;
+    animate: number;
 }
 
 export class Position extends Schema {
@@ -15,6 +16,7 @@ export class Position extends Schema {
 export class Player extends Schema {
     @type("string") name: string;
     @type(Position) position = new Position();
+    @type("number") animation: number;
 
-    pressedKeys: PressedKeys = { spin: 0, move: 0 };
+    pressedKeys: PressedKeys = { spin: 0, move: 0, animate: null };
 }
