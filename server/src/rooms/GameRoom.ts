@@ -25,10 +25,10 @@ export class GameRoom extends Room<StateHandler> {
         const player = new Player();
         player.name = `Player ${ this.clients.length }`;
         player.position.x = 0;
-        player.position.y = 5;
+        player.position.y = 0;
         player.position.z = 3;
         player.position.heading = 0;
-
+        player.animation = null;
         this.state.players.set(client.sessionId, player);
     }
 
@@ -51,6 +51,7 @@ export class GameRoom extends Room<StateHandler> {
             }
 
             player.position.heading += player.pressedKeys.spin * 0.03;
+            player.animation = player.pressedKeys.animate;
         });
     }
 
