@@ -66,17 +66,29 @@ client.joinOrCreate<StateHandler>("game").then(room => {
     room.state.players.onAdd = function(player, key) {
         var Walk:BABYLON.Animatable;
 
-        BABYLON.SceneLoader.ImportMesh("him", baseURL + "players/", "Dude.babylon", scene, 
+        BABYLON.SceneLoader.ImportMesh("him", baseURL + "players/", "Dude.babylon", scene,
             function (newMeshes, particleSystems, skeletons) {
                 playerViews[key] = newMeshes[0];
                 Walk = scene.beginAnimation(skeletons[0], 0, 100, true, 2.0);
                 console.log(newMeshes)
                 if (playerViews[key] != null) {
+
+                    playerViews[key].rotation.y = Math.PI;
+                    playerViews[key].position = new BABYLON.Vector3(0, 0, -80);
                     playerViews[key].scaling = new BABYLON.Vector3(0.05, 0.05, 0.05);
                 }
-                
+
             }
         );
+
+        // Our built-in 'sphere' shape. Params: name, subdivs, size, scene
+        // playerViews[key] = BABYLON.Mesh.CreateSphere("sphere1", 16, 2, scene);
+        // playerViews[key] = BABYLON.Mesh.CreateBox("box1", 1, scene);
+        // playerViews[key].scaling.set(0.3, 1, 0.3);
+
+        // Move the sphere upward 1/2 its height
+        // playerViews[key].position.set(player.position.x, player.position.y, player.position.z);
+        // playerViews[key].rotation.set(0, 0, 0);
 
         // Update player position based on changes from the server.
         player.position.onChange = () => {
@@ -92,14 +104,14 @@ client.joinOrCreate<StateHandler>("game").then(room => {
                     Walk.pause();
                 }
             }
-            
+
             if (key === room.sessionId) {
-                var dist = 1;
+                var dist = 0.1;
                 var x = player.position.x + dist * Math.sin(player.position.heading);
                 var z = player.position.z + dist * Math.cos(player.position.heading);
                 camera.position.set(x, player.position.y + 5, z);
                 camera.rotation.set(0, player.position.heading + Math.PI, 0);
-                
+
             }
         };
 
@@ -122,11 +134,11 @@ client.joinOrCreate<StateHandler>("game").then(room => {
     const keyboard: PressedKeys = { spin: 0, move: 0, animate:null };
     window.addEventListener("keydown", function(e) {
         if (e.which === Keycode.A) {
-            keyboard.spin = -1;       
+            keyboard.spin = -1;
         } else if (e.which === Keycode.D) {
             keyboard.spin = 1;
         } else if (e.which === Keycode.W) {
-            keyboard.move = -1; 
+            keyboard.move = -1;
             keyboard.animate = ANIMATE.WALK;
         } else if (e.which === Keycode.S) {
             keyboard.move = 1;
@@ -141,7 +153,7 @@ client.joinOrCreate<StateHandler>("game").then(room => {
             keyboard.spin = 0;
         } else if (e.which === Keycode.W) {
             keyboard.move = 0;
-            
+
         } else if (e.which === Keycode.S) {
             keyboard.move = 0;
         }
