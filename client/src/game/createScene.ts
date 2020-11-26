@@ -19,12 +19,11 @@ export function createScene(canvas, engine){
     var scene = new BABYLON.Scene(engine);
     //physics and gravity added to scene
     scene.enablePhysics ( new BABYLON.Vector3(0, -9.81,0));
-
     // This creates and positions a free camera (non-mesh)    Vector3( x=l/r,y=up,z=l/r)
     var camera = new BABYLON.FreeCamera("camera1", new BABYLON.Vector3(0, 0.5, -10), scene);
     //consider UniversalCamera- 1st choice for fps, has collisions and can add many inputs
     camera.applyGravity = true;
-    camera.ellipsoid = new BABYLON.Vector3(1, 1, 1);
+    // camera.ellipsoid = new BABYLON.Vector3(1, 1, 1);
 
     // This targets the camera to scene origin
     camera.setTarget(BABYLON.Vector3.Zero());
@@ -47,27 +46,35 @@ export function createScene(canvas, engine){
     var baseURL =  "https://raw.githubusercontent.com/WeibelLab-Teaching/CSE_218_118_Fa20_Team_N/main/server/src/assets/";
     var mazeName1 = "mazes/thinMaze.glb";
     var mazeName2 = "mazes/hardMaze.babylon";
-    var maze =BABYLON.SceneLoader.ImportMesh("", baseURL, mazeName1, scene, function(meshes){
-        meshes[0].material = testMat;
-    });
-    // var meshMaze = BABYLON.SceneLoader.ImportMesh("Plane", "", baseURL+mazeName,scene, function(meshes){
-    //     meshes.forEach(el =>{
-    //         console.log(el); //this is t
+    var brickMat = new BABYLON.StandardMaterial("brick",scene);
+    // brickMat.bumpTexture = new BABYLON.Texture("https://i.imgur.com/yn98ktz.png",scene);
+    brickMat.diffuseTexture  = new BABYLON.Texture("https://i.imgur.com/yn98ktz.png",scene);
+    brickMat.diffuseTexture.scale(3);
+	// brickMat.diffuseTexture.vOffset = 0.5;
 
-    //         Object.keys(el).forEach(element => {
-    //             console.log(element);
-    //         });
-    //     })
-    // });
+    
+    var maze =BABYLON.SceneLoader.ImportMesh("", baseURL, mazeName1, scene, function(meshes){
+        let i = 0
+        meshes.forEach(element => {
+            meshes[1].material = brickMat;
+            meshes[1].checkCollisions = true;
+        });
+        // scene.createDefaultEnvironment();
+
+    });
+    //a different way to upload assets
     // var assetsMan = new BABYLON.AssetsManager(scene);
     // var meshTask = assetsMan.addMeshTask("","", baseURL,mazeName2);
     // meshTask.onSuccess = function(task){
     //     // var material_02 = scene.getMaterialByName('mat').set = new BABYLON.Color3(0,0,1)
     //     task.loadedMeshes[0].position = new BABYLON.Vector3(0,0,0);
     //     task.loadedMeshes.forEach(meshes=>{
-    //         meshes.material = testMat;
+    //         meshes.material = brickMat;
     //     })
     // } 
+
+    // Ground material
+    var groundMat = new BABYLON.StandardMaterial("ground",scene);
 
     // Our built-in 'ground' shape. Params: name, width, depth, subdivs, scene
     var ground = BABYLON.Mesh.CreateGround("ground1", 100, 100, 2, scene);
@@ -83,10 +90,7 @@ export function createScene(canvas, engine){
     skyboxMaterial.specularColor = new BABYLON.Color3(0, 0, 0);
     skybox.material = skyboxMaterial;
 
-    //collisions..
-    // scene.collisionsEnabled = true; //dont do this!!
-    camera.checkCollisions = true;
-    ground.checkCollisions = true;
+   
     // assetsMan.load();
 
     // Colyseus / Join Room
@@ -119,6 +123,9 @@ export function createScene(canvas, engine){
             // Set camera to follow current player
             if (key === room.sessionId) {
                 camera.setTarget(playerViews[key].position);
+                camera.ellipsoid = new BABYLON.Vector3(1.5, 2, 1.5);
+                // alt option
+                // camera.collisionRadius = new BABYLON.Vector3(0.5, 0.5, 0.5)
             }
         };
 
@@ -164,6 +171,11 @@ export function createScene(canvas, engine){
             engine.resize();
         });
     });
+
+     //collisions..
+     scene.collisionsEnabled = true; 
+     camera.checkCollisions = true;
+     ground.checkCollisions = true;
 
     // Scene render loop
     engine.runRenderLoop(function() {
