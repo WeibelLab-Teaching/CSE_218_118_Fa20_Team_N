@@ -54,14 +54,14 @@ export function createScene(canvas, engine){
 
     
     var maze =BABYLON.SceneLoader.ImportMesh("", baseURL, mazeName1, scene, function(meshes){
-        let i = 0
+        // apply my own materials
         meshes.forEach(element => {
             meshes[1].material = brickMat;
             meshes[1].checkCollisions = true;
         });
         // scene.createDefaultEnvironment();
-
     });
+
     //a different way to upload assets
     // var assetsMan = new BABYLON.AssetsManager(scene);
     // var meshTask = assetsMan.addMeshTask("","", baseURL,mazeName2);
@@ -74,11 +74,12 @@ export function createScene(canvas, engine){
     // } 
 
     // Ground material
-    var groundMat = new BABYLON.StandardMaterial("ground",scene);
-
+    
     // Our built-in 'ground' shape. Params: name, width, depth, subdivs, scene
     var ground = BABYLON.Mesh.CreateGround("ground1", 100, 100, 2, scene);
-
+    var groundMat = new BABYLON.StandardMaterial("ground",scene);
+    groundMat.diffuseTexture = new BABYLON.Texture("https://www.babylonjs-playground.com/textures/floor.png",scene);
+    ground.material = groundMat;
     // Skybox
     var skybox = BABYLON.MeshBuilder.CreateBox("skyBox", {size:1000.0}, scene);
     var skyboxMaterial = new BABYLON.StandardMaterial("skyBox", scene);
