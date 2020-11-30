@@ -24,9 +24,10 @@ export class GameRoom extends Room<StateHandler> {
     onJoin (client) {
         const player = new Player();
         player.name = `Player ${ this.clients.length }`;
-        player.position.x = 0;
+
+        player.position.x = this.collision.map.spawns[0].x;
         player.position.y = 0;
-        player.position.z = 3;
+        player.position.x = this.collision.map.spawns[0].x;
         player.position.heading = 0;
         player.animation = null;
         this.state.players.set(client.sessionId, player);
