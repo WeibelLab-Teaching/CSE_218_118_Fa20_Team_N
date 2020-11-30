@@ -8,13 +8,15 @@ export class Position2D {
 
 interface Transform {
     size: number,
-    offset: number
+    offset: number,
+    scale: number
 }
 
 interface HeightMap {
     row: Transform,
     col: Transform,
-    dat: Array<Array<number>>
+    dat: Array<Array<number>>,
+    spawns: Array<Position2D>
 }
 
 export class Collision {
@@ -34,8 +36,8 @@ export class Collision {
     public detect(position: Position2D) : boolean {
         const X = this.map.row.size;
         const Z = this.map.col.size;
-        const x = Math.round(position.x - this.map.row.offset);
-        const z = Math.round(position.z - this.map.col.offset);
+        const x = Math.round((position.x - this.map.row.offset) / this.map.row.scale);
+        const z = Math.round((position.z - this.map.col.offset) / this.map.col.scale);
         // console.log(X, Z, x, z);
         return x >= 0
             && x < X
