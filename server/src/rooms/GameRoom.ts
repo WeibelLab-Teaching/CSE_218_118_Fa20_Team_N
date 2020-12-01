@@ -3,7 +3,6 @@ import { Room, Client } from "colyseus";
 import { StateHandler } from "./StateHandler";
 import { Player } from "../entities/Player";
 import { Position2D, Collision } from "../collision/Collision";
-import { BinaryFileAssetTask } from "babylonjs";
 
 export class GameRoom extends Room<StateHandler> {
     maxClients = 8;
@@ -22,18 +21,35 @@ export class GameRoom extends Room<StateHandler> {
     collision : Collision;
 
     onJoin (client) {
-        const player = new Player();
-        player.name = `Player ${ this.clients.length }`;
-
-        player.position.x = this.collision.map.spawns[0].x;
-        player.position.y = 0;
-        player.position.x = this.collision.map.spawns[0].x;
-        player.position.heading = 0;
-        player.animation = null;
-        this.state.players.set(client.sessionId, player);
+        switch(this.state.stage) {
+            case 'waiting':
+                const player = new Player();
+                player.name = `Player ${ this.clients.length }`;
+                this.respawnPlayer(player);
+                this.state.players.set(client.sessionId, player);
+                if (this.state.players.size === 2) {
+                    this.state.stage = 'running';
+                    this.state.players.forEach(this.respawnPlayer);
+                }
+                break;
+            case 'running':
+                let reachTarget = true;
+                this.state.players.forEach((player, key, map) => {
+                    let dx = player.position.x - this.collision.map.target.x;
+                    let dz = player.position.z - this.collision.map.target.z;
+                    reachTarget = reachTarget && Math.sqrt(dx*dx + dz*dz) < 7;
+                })
+                if (reachTarget) {
+                    this.state.stage = 'wins';
+                }
+                break;
+            case 'wins':
+                break;
+        }
     }
 
     onUpdate () {
+        if (this.state.stage === 'wins') return;
         this.state.players.forEach((player, sessionId) => {
             let step = 0.1;
             while (step > 0.01) {
@@ -61,6 +77,15 @@ export class GameRoom extends Room<StateHandler> {
     }
 
     onDispose () {
+    }
+
+    respawnPlayer = (player: Player) => {
+        let i = Math.floor((Math.random() * this.collision.map.spawns.length));
+        player.position.x = this.collision.map.spawns[i].x;
+        player.position.y = 0;
+        player.position.z = this.collision.map.spawns[i].z;
+        player.position.heading = 0;
+        player.animation = null;
     }
 
 }

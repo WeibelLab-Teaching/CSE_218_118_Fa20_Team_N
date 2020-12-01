@@ -1,4 +1,3 @@
-import { PNG } from 'pngjs/browser';
 var fetch = require('node-fetch');
 
 export class Position2D {
@@ -16,7 +15,8 @@ interface HeightMap {
     row: Transform,
     col: Transform,
     dat: Array<Array<number>>,
-    spawns: Array<Position2D>
+    spawns: Array<Position2D>,
+    target: Position2D
 }
 
 export class Collision {
