@@ -3,7 +3,6 @@ import { Room, Client } from "colyseus";
 import { StateHandler } from "./StateHandler";
 import { Player } from "../entities/Player";
 import { Position2D, Collision } from "../collision/Collision";
-import { BinaryFileAssetTask } from "babylonjs";
 
 export class GameRoom extends Room<StateHandler> {
     maxClients = 8;

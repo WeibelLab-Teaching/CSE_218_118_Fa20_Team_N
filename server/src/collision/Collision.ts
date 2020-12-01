@@ -1,4 +1,3 @@
-import { PNG } from 'pngjs/browser';
 var fetch = require('node-fetch');
 
 export class Position2D {
