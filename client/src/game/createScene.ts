@@ -79,6 +79,7 @@ export function createScene(canvas, engine){
     var ground = BABYLON.Mesh.CreateGround("ground1", 100, 100, 2, scene);
     var groundMat = new BABYLON.StandardMaterial("ground",scene);
     groundMat.diffuseTexture = new BABYLON.Texture("https://www.babylonjs-playground.com/textures/floor.png",scene);
+    groundMat.bumpTexture
     ground.material = groundMat;
     // Skybox
     var skybox = BABYLON.MeshBuilder.CreateBox("skyBox", {size:1000.0}, scene);
