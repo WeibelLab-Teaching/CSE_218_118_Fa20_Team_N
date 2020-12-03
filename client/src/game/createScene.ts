@@ -1,16 +1,16 @@
 
-import "./index.css";
+import "../index.css";
 
 import * as BABYLON from "babylonjs";
 import Keycode from "keycode.js";
 
-import { client } from "./game/network";
-import {ANIMATE} from "./types";
+import {client } from "./network";
+import {ANIMATE} from "../types";
 
 // Re-using server-side types for networking
 // This is optional, but highly recommended
-import { StateHandler } from "../../server/src/rooms/StateHandler";
-import { PressedKeys } from "../../server/src/entities/Player";
+import { StateHandler } from "../../../server/src/rooms/StateHandler";
+import { PressedKeys } from "../../../server/src/entities/Player";
 import { Vector2, Vector3 } from "babylonjs";
 import 'babylonjs-loaders';
 
@@ -58,10 +58,8 @@ export function createScene(canvas, engine){
     
     var maze =BABYLON.SceneLoader.ImportMesh("", baseURL, mazeName1, scene, function(meshes){
         // apply my own materials
-        meshes.forEach(element => {
-            element.material = brickMat;
-           element.checkCollisions = true;
-        });
+        meshes[1].material = brickMat;
+        meshes[1].checkCollisions = true;
         // scene.createDefaultEnvironment(); //default lights and texture
     });
 
@@ -101,24 +99,24 @@ export function createScene(canvas, engine){
 
     // Colyseus / Join Room
     client.joinOrCreate<StateHandler>("game").then(room => {
-        const playerViews: {[id: string]: BABYLON.Mesh} = {};
+        const playerViews: {[id: string]: BABYLON.AbstractMesh} = {};
 
         room.state.players.onAdd = function(player, key) {
             var Walk:BABYLON.Animatable;
 
             BABYLON.SceneLoader.ImportMesh("him", baseURL + "players/", "Dude.babylon", scene,
-            function (newMeshes, particleSystems, skeletons) {
-                playerViews[key] = newMeshes[0];
-                Walk = scene.beginAnimation(skeletons[0], 0, 100, true, 2.0);
-                console.log(newMeshes)
-                if (playerViews[key] != null) {
+                function (newMeshes, particleSystems, skeletons) {
+                    playerViews[key] = newMeshes[0];
+                    Walk = scene.beginAnimation(skeletons[0], 0, 100, true, 2.0);
+                    console.log(newMeshes)
+                    if (playerViews[key] != null) {
 
-                    playerViews[key].rotation.y = Math.PI;
-                    playerViews[key].position = new BABYLON.Vector3(0, 0, -80);
-                    playerViews[key].scaling = new BABYLON.Vector3(0.05, 0.05, 0.05);
+                        playerViews[key].rotation.y = Math.PI;
+                        playerViews[key].position = new BABYLON.Vector3(0, 0, -80);
+                        playerViews[key].scaling = new BABYLON.Vector3(0.05, 0.05, 0.05);
+                    }
+
                 }
-
-            }
         );
            
 
@@ -155,7 +153,7 @@ export function createScene(canvas, engine){
                 camera.setTarget(playerViews[key].position);
                 camera.ellipsoid = new BABYLON.Vector3(1.5, 2, 1.5);
                 // alt option
-                // camera.collisionRadius = new BABYLON.Vector3(0.5, 0.5, 0.5)
+                camera.collisionMask=(0.5);
             }
         };
 
@@ -206,9 +204,9 @@ export function createScene(canvas, engine){
     });
 
      //collisions..
-    //  scene.collisionsEnabled = true; 
-    //  camera.checkCollisions = true;
-    //  ground.checkCollisions = true;
+     scene.collisionsEnabled = true; 
+     camera.checkCollisions = true;
+     ground.checkCollisions = true;
 
     // Scene render loop
     engine.runRenderLoop(function() {
