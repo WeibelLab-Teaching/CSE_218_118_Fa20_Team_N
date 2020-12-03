@@ -1,17 +1,18 @@
 
+import "./index.css";
 
 import * as BABYLON from "babylonjs";
 import Keycode from "keycode.js";
 
-import { client } from "./network";
+import { client } from "./game/network";
+import {ANIMATE} from "./types";
 
 // Re-using server-side types for networking
 // This is optional, but highly recommended
-import { StateHandler } from "../../../server/src/rooms/StateHandler";
-import { PressedKeys } from "../../../server/src/entities/Player";
+import { StateHandler } from "../../server/src/rooms/StateHandler";
+import { PressedKeys } from "../../server/src/entities/Player";
 import { Vector2, Vector3 } from "babylonjs";
 import 'babylonjs-loaders';
-
 
 
 export function createScene(canvas, engine){
@@ -20,10 +21,12 @@ export function createScene(canvas, engine){
     //physics and gravity added to scene
     scene.enablePhysics ( new BABYLON.Vector3(0, -9.81,0));
     // This creates and positions a free camera (non-mesh)    Vector3( x=l/r,y=up,z=l/r)
-    var camera = new BABYLON.FreeCamera("camera1", new BABYLON.Vector3(0, 0.5, -10), scene);
+    // var camera = new BABYLON.FreeCamera("camera1", new BABYLON.Vector3(0, 0.5, -10), scene);
+    var camera = new BABYLON.FreeCamera("camera1", new BABYLON.Vector3(0, 50, 0), scene);
+
     //consider UniversalCamera- 1st choice for fps, has collisions and can add many inputs
+
     camera.applyGravity = true;
-    // camera.ellipsoid = new BABYLON.Vector3(1, 1, 1);
 
     // This targets the camera to scene origin
     camera.setTarget(BABYLON.Vector3.Zero());
@@ -45,7 +48,7 @@ export function createScene(canvas, engine){
     //import maze from github, and add to scene
     var baseURL =  "https://raw.githubusercontent.com/WeibelLab-Teaching/CSE_218_118_Fa20_Team_N/main/server/src/assets/";
     var mazeName1 = "mazes/thinMaze.glb";
-    var mazeName2 = "mazes/hardMaze.babylon";
+    
     var brickMat = new BABYLON.StandardMaterial("brick",scene);
     // brickMat.bumpTexture = new BABYLON.Texture("https://i.imgur.com/yn98ktz.png",scene);
     brickMat.diffuseTexture  = new BABYLON.Texture("https://i.imgur.com/yn98ktz.png",scene);
@@ -56,10 +59,10 @@ export function createScene(canvas, engine){
     var maze =BABYLON.SceneLoader.ImportMesh("", baseURL, mazeName1, scene, function(meshes){
         // apply my own materials
         meshes.forEach(element => {
-            meshes[1].material = brickMat;
-            meshes[1].checkCollisions = true;
+            element.material = brickMat;
+           element.checkCollisions = true;
         });
-        // scene.createDefaultEnvironment();
+        // scene.createDefaultEnvironment(); //default lights and texture
     });
 
     //a different way to upload assets
@@ -81,6 +84,7 @@ export function createScene(canvas, engine){
     groundMat.diffuseTexture = new BABYLON.Texture("https://www.babylonjs-playground.com/textures/floor.png",scene);
     groundMat.bumpTexture
     ground.material = groundMat;
+
     // Skybox
     var skybox = BABYLON.MeshBuilder.CreateBox("skyBox", {size:1000.0}, scene);
     var skyboxMaterial = new BABYLON.StandardMaterial("skyBox", scene);
@@ -100,30 +104,54 @@ export function createScene(canvas, engine){
         const playerViews: {[id: string]: BABYLON.Mesh} = {};
 
         room.state.players.onAdd = function(player, key) {
-            // Our built-in 'sphere' shape. Params: name, subdivs, size, scene
-            // playerViews[key] = BABYLON.Mesh.CreateSphere("sphere1", 16, 2, scene);
-            playerViews[key] = BABYLON.Mesh.CreateBox("box1", 1, scene);
-            playerViews[key].scaling.set(0.3, 1, 0.3);
+            var Walk:BABYLON.Animatable;
+
+            BABYLON.SceneLoader.ImportMesh("him", baseURL + "players/", "Dude.babylon", scene,
+            function (newMeshes, particleSystems, skeletons) {
+                playerViews[key] = newMeshes[0];
+                Walk = scene.beginAnimation(skeletons[0], 0, 100, true, 2.0);
+                console.log(newMeshes)
+                if (playerViews[key] != null) {
+
+                    playerViews[key].rotation.y = Math.PI;
+                    playerViews[key].position = new BABYLON.Vector3(0, 0, -80);
+                    playerViews[key].scaling = new BABYLON.Vector3(0.05, 0.05, 0.05);
+                }
+
+            }
+        );
+           
 
             // Move the sphere upward 1/2 its height
-            playerViews[key].position.set(player.position.x, player.position.y, player.position.z);
-            playerViews[key].rotation.set(0, 0, 0);
+            // playerViews[key].position.set(player.position.x, player.position.y, player.position.z);
+            // playerViews[key].rotation.set(0, 0, 0);
 
             // Update player position based on changes from the server.
             player.position.onChange = () => {
-                playerViews[key].position.set(player.position.x, player.position.y, player.position.z);
-                playerViews[key].rotation.set(0, player.position.heading, 0);
+                if (playerViews[key] != null) {
+                    playerViews[key].position.set(player.position.x, player.position.y, player.position.z);
+                    playerViews[key].rotation.set(0, player.position.heading, 0);
+                }
+    
+                if (Walk != null) {
+                    if (player.animation == ANIMATE.WALK) {
+                        Walk.restart();
+                    } else {
+                        Walk.pause();
+                    }
+                }
                 if (key === room.sessionId) {
-                    var dist = 1;
+                    var dist = 0.1;
                     var x = player.position.x + dist * Math.sin(player.position.heading);
                     var z = player.position.z + dist * Math.cos(player.position.heading);
-                    camera.position.set(x, player.position.y + 0.5, z);
-                    camera.rotation.set(0, player.position.heading, 0);
+                    camera.position.set(x, player.position.y + 5, z);
+                    camera.rotation.set(0, player.position.heading + Math.PI, 0);
+    
                 }
             };
 
             // Set camera to follow current player
-            if (key === room.sessionId) {
+            if (key === room.sessionId && playerViews[key] != null) {
                 camera.setTarget(playerViews[key].position);
                 camera.ellipsoid = new BABYLON.Vector3(1.5, 2, 1.5);
                 // alt option
@@ -141,16 +169,17 @@ export function createScene(canvas, engine){
         });
 
         // Keyboard listeners
-        const keyboard: PressedKeys = { spin: 0, move: 0 };
+        const keyboard: PressedKeys = { spin: 0, move: 0, animate:null };
         window.addEventListener("keydown", function(e) {
             if (e.which === Keycode.A) {
                 keyboard.spin = -1;
             } else if (e.which === Keycode.D) {
                 keyboard.spin = 1;
             } else if (e.which === Keycode.W) {
-                keyboard.move = 1;
-            } else if (e.which === Keycode.S) {
                 keyboard.move = -1;
+                keyboard.animate = ANIMATE.WALK;
+            } else if (e.which === Keycode.S) {
+                keyboard.move = 1;
             }
             room.send('key', keyboard);
         });
@@ -162,9 +191,11 @@ export function createScene(canvas, engine){
                 keyboard.spin = 0;
             } else if (e.which === Keycode.W) {
                 keyboard.move = 0;
+
             } else if (e.which === Keycode.S) {
                 keyboard.move = 0;
             }
+            keyboard.animate = null;
             room.send('key', keyboard);
         });
 
@@ -175,9 +206,9 @@ export function createScene(canvas, engine){
     });
 
      //collisions..
-     scene.collisionsEnabled = true; 
-     camera.checkCollisions = true;
-     ground.checkCollisions = true;
+    //  scene.collisionsEnabled = true; 
+    //  camera.checkCollisions = true;
+    //  ground.checkCollisions = true;
 
     // Scene render loop
     engine.runRenderLoop(function() {
