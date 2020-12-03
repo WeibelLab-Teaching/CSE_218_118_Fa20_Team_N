@@ -19,9 +19,15 @@
   "author": "Endel Dreyer <endel.dreyer@gmail.com>",
   "license": "Apache 2.0",
   "devDependencies": {
+    "@types/get-image-colors": "^2.0.0",
+    "@types/pngjs": "^3.4.2",
     "typescript": "^3.9.3"
   },
   "dependencies": {
-    "babylonjs": "^4.2.0"
+    "babylonjs": "^4.2.0",
+    "get-image-colors": "^4.0.0",
+    "get-pixels": "^3.3.2",
+    "node-fetch": "^2.6.1",
+    "pngjs": "^3.4.0"
   }
 }
