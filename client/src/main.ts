@@ -1,21 +1,21 @@
 import * as BABYLON from "babylonjs";
 import {rotateSmallMaze, mainMenu, impotDude} from './utils/utils'
 import "./index.css";
-
+import { audio_init } from './audio/audio';
 
 
 const canvas = document.getElementById('game') as HTMLCanvasElement;
 var engine = null;
 var scene = null;
 var sceneToRender = null;
-var createDefaultEngine = function() 
+var createDefaultEngine = function()
 { return new BABYLON.Engine(canvas, true, { preserveDrawingBuffer: true, stencil: true }); };
 
 var showStartMenu = function(){
-   
+
     var scene = new BABYLON.Scene(engine);
-    scene.clearColor = new BABYLON.Color4(0.31, 0.37, 0.67, 0.5);	
-  
+    scene.clearColor = new BABYLON.Color4(0.31, 0.37, 0.67, 0.5);
+
     var camera = new BABYLON.ArcRotateCamera("camera1",  -Math.PI / 2, Math.PI / 4, 5, new BABYLON.Vector3(0, 0, 0), scene);
     camera.attachControl(canvas, true);
 
@@ -30,6 +30,8 @@ var showStartMenu = function(){
 
     return scene;
 };
+
+audio_init();
 
 //main engine loop...
 var engine;
@@ -53,6 +55,3 @@ var engine;
         window.addEventListener("resize", function () {
             engine.resize();
         });
-
-
-

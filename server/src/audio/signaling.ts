@@ -15,7 +15,12 @@ export function initWebRTC() {
     const app = express();
     var server = http.createServer(app)
     // var io  = socketio.listen(server);
-    let io = require("socket.io")(server);
+    let io = require("socket.io")(server, {
+        cors: {
+            origin: '*',
+            methods: ['GET', 'POST']
+        }
+    });
     //io.set('log level', 2);
 
     server.listen(PORT, null, function() {

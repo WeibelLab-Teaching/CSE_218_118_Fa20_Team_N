@@ -9,8 +9,9 @@
     "esModuleInterop": true,
     "experimentalDecorators": true,
     "emitDecoratorMetadata": true,
-    "types": [ "babylonjs", "babylonjs-loaders" ]
+    "types": [ "babylonjs", "babylonjs-loaders", "node", "jquery" ]
   },
+  "allowSyntheticDefaultImports": true,
   "include": [
     "src/**/*.ts"
   ]

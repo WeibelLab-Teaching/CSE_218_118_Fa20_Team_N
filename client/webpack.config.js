@@ -5,51 +5,55 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 const ExtractTextPlugin = require("extract-text-webpack-plugin");
 
 module.exports = function(options) {
-  if (!options) options = {};
+    if (!options) options = {};
 
-  const MODE = (options.production)
-    ? "production"
-    : "development";
+    const MODE = (options.production) ?
+        "production" :
+        "development";
 
-  return {
-    mode: MODE,
+    return {
+        mode: MODE,
 
-    entry: {
-      main: path.resolve('src/main.ts')
-    },
+        entry: {
+            main: path.resolve('src/main.ts')
+        },
 
-    output: {
-      path: __dirname + "/dist",
-      filename: 'bundle.js'
-    },
+        output: {
+            path: __dirname + "/dist",
+            filename: 'bundle.js'
+        },
 
-    devtool: 'cheap-source-map',
+        devtool: 'cheap-source-map',
 
-    devServer: {
-      disableHostCheck: true
-    },
+        devServer: {
+            disableHostCheck: true
+        },
 
-    module: {
-      rules: [
-        { test: /\.ts$/, loader: "ts-loader" },
-        { test: /\.css$/, loader: ExtractTextPlugin.extract({ fallback: "style-loader", use: "css-loader" }) },
-        { test: /\.(woff|woff2|eot|ttf|svg)$/, loader: 'file-loader?limit=1024&name=[name].[ext]' },
-      ]
-    },
+        node: {
+            fs: 'empty'
+        },
 
-    plugins: [
-      new ExtractTextPlugin("styles.css"),
-      new HtmlWebpackPlugin({
-        template: path.resolve("src", "index.html")
-      }),
-    ],
+        module: {
+            rules: [
+                { test: /\.ts$/, loader: "ts-loader" },
+                { test: /\.css$/, loader: ExtractTextPlugin.extract({ fallback: "style-loader", use: "css-loader" }) },
+                { test: /\.(woff|woff2|eot|ttf|svg)$/, loader: 'file-loader?limit=1024&name=[name].[ext]' },
+            ]
+        },
 
-    // Disable MAX 250kb entrypoint warnings on console
-    performance: { hints: false },
+        plugins: [
+            new ExtractTextPlugin("styles.css"),
+            new HtmlWebpackPlugin({
+                template: path.resolve("src", "index.html")
+            }),
+        ],
 
-    resolve: {
-      extensions: ['.ts', '.js', '.json']
+        // Disable MAX 250kb entrypoint warnings on console
+        performance: { hints: false },
+
+        resolve: {
+            extensions: ['.ts', '.js', '.json']
+        }
+
     }
-
-  }
 };
