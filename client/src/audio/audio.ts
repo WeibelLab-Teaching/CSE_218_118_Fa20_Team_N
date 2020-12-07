@@ -1,7 +1,8 @@
 /** CONFIG **/
-var SIGNALING_SERVER = "http://localhost:2658";
+// var SIGNALING_SERVER = "http://localhost:2658";
+var SIGNALING_SERVER = location.protocol + '//' + location.hostname + ':2658';
 var USE_AUDIO = true;
-var USE_VIDEO = true;
+var USE_VIDEO = false;
 var DEFAULT_CHANNEL = 'some-global-channel-name';
 var MUTE_AUDIO_BY_DEFAULT = false;
 
@@ -16,7 +17,7 @@ var ICE_SERVERS = [
 ];
 
 var signaling_socket: Socket = null;   /* our socket.io connection to our webserver */
-var local_media_stream = null; /* our own microphone / webcam */
+var local_media_stream: MediaStream = null; /* our own microphone / webcam */
 var peers = {};                /* keep track of our peer connections, indexed by peer_id (aka socket.io id) */
 var peer_media_elements = {};  /* keep track of our <video>/<audio> tags, indexed by peer_id */
 
@@ -91,7 +92,7 @@ export function audio_init() {
             }
         }
         peer_connection.ontrack = function(event) {
-            console.log("onAddStream", event);
+            console.log("onTrack", event);
             var remote_media = USE_VIDEO ? $("<video>") : $("<audio>");
             remote_media.attr("autoplay", "autoplay");
             if (MUTE_AUDIO_BY_DEFAULT) {
@@ -100,26 +101,16 @@ export function audio_init() {
             remote_media.attr("controls", "");
             peer_media_elements[peer_id] = remote_media;
             $('body').append(remote_media);
-            attachMediaStream(remote_media[0], event.streams[0]);
+            let newStream = new MediaStream([event.track]);
+            attachMediaStream(remote_media[0], newStream);
         }
-
-        /*
-        peer_connection.onaddstream = function(event) {
-            console.log("onAddStream", event);
-            var remote_media = USE_VIDEO ? $("<video>") : $("<audio>");
-            remote_media.attr("autoplay", "autoplay");
-            if (MUTE_AUDIO_BY_DEFAULT) {
-                remote_media.attr("muted", "true");
-            }
-            remote_media.attr("controls", "");
-            peer_media_elements[peer_id] = remote_media;
-            $('body').append(remote_media);
-            attachMediaStream(remote_media[0], event.stream);
-        }
-        */
 
         /* Add our local stream */
-        peer_connection.addTrack(local_media_stream);
+        console.debug(local_media_stream);
+        let track = local_media_stream.getTracks()[0];
+        console.debug(track);
+        console.debug(typeof track);
+        peer_connection.addTrack(local_media_stream.getAudioTracks()[0]);
 
         /* Only one side of the peer connection should create the
             * offer, the signaling server picks one to be the offerer.
@@ -240,30 +231,41 @@ function setup_local_media(callback, errorback?) {
         * attach it to an <audio> or <video> tag if they give us access. */
     console.log("Requesting access to local audio / video inputs");
 
+    let streamHandler = function(stream) { /* user accepted access to a/v */
+        console.log("Access granted to audio/video");
+        local_media_stream = stream;
+        var local_media = USE_VIDEO ? $("<video>") : $("<audio>");
+        local_media.attr("autoplay", "autoplay");
+        local_media.attr("oncanplay", "this.muted=true"); /* always mute ourselves by default */
+        local_media.attr("controls", "");
+        $('body').append(local_media);
+        attachMediaStream(local_media[0], stream);
 
-    navigator.getUserMedia = ( navigator.getUserMedia ||
-            navigator.webkitGetUserMedia ||
-            navigator.mozGetUserMedia ||
-            navigator.msGetUserMedia);
+        if (callback) callback();
+    };
+
+    let errorHandler = function() { /* user denied access to a/v */
+        console.log("Access denied for audio/video");
+        alert("You chose not to provide access to the camera/microphone, demo will not work.");
+        if (errorback) errorback();
+    };
+
+    navigator.getUserMedia = (
+        navigator.getUserMedia ||
+        navigator.webkitGetUserMedia ||
+        navigator.mozGetUserMedia ||
+        navigator.msGetUserMedia);
 
 
-
-    navigator.getUserMedia({"audio":USE_AUDIO, "video":USE_VIDEO},
-        function(stream) { /* user accepted access to a/v */
-            console.log("Access granted to audio/video");
-            local_media_stream = stream;
-            var local_media = USE_VIDEO ? $("<video>") : $("<audio>");
-            local_media.attr("autoplay", "autoplay");
-            local_media.attr("muted", "true"); /* always mute ourselves by default */
-            local_media.attr("controls", "");
-            $('body').append(local_media);
-            attachMediaStream(local_media[0], stream);
-
-            if (callback) callback();
-        },
-        function() { /* user denied access to a/v */
-            console.log("Access denied for audio/video");
-            alert("You chose not to provide access to the camera/microphone, demo will not work.");
-            if (errorback) errorback();
-        });
+    if (navigator.mediaDevices === undefined) {
+        console.info(1);
+        navigator.getUserMedia({
+            "audio":USE_AUDIO, "video":USE_VIDEO
+        }, streamHandler, errorHandler);
+    } else {
+        console.info(2);
+        navigator.mediaDevices.getUserMedia({
+            "audio":USE_AUDIO, "video":USE_VIDEO
+        }).then(streamHandler).catch(errorHandler);
+    }
 }
