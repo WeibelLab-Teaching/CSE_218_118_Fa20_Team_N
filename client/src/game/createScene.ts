@@ -48,6 +48,9 @@ export function createScene(canvas, engine){
     //import maze from github, and add to scene
     var baseURL =  "https://raw.githubusercontent.com/WeibelLab-Teaching/CSE_218_118_Fa20_Team_N/main/server/src/assets/";
     var mazeName1 = "mazes/thinMaze.glb";
+    var lmpath = "landmarks/";
+    var internal_LMs = ["angel.stl", "nike.stl", "palm_tree.obj"];
+    var external_LMs = ["eiffel_tower.stl", "pyramid.stl"];
     
     var brickMat = new BABYLON.StandardMaterial("brick",scene);
     // brickMat.bumpTexture = new BABYLON.Texture("https://i.imgur.com/yn98ktz.png",scene);
@@ -62,6 +65,14 @@ export function createScene(canvas, engine){
         meshes[1].checkCollisions = true;
         // scene.createDefaultEnvironment(); //default lights and texture
     });
+
+    var angel = BABYLON.SceneLoader.ImportMesh("", "https://raw.githubusercontent.com/WeibelLab-Teaching/CSE_218_118_Fa20_Team_N/ad-landmarks/server/src/assets/", 
+        "angel.stl",
+        scene, 
+        function(newMeshes){
+            newMeshes.forEach(function(mesh){
+            })
+        } );
 
     //a different way to upload assets
     // var assetsMan = new BABYLON.AssetsManager(scene);
@@ -212,5 +223,8 @@ export function createScene(canvas, engine){
     engine.runRenderLoop(function() {
         scene.render();
     });
+
+}
+function randomizeLMLocations(path){
 
 }
