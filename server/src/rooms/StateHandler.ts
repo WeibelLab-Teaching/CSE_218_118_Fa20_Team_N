@@ -3,5 +3,5 @@ import { Player } from "../entities/Player";
 
 export class StateHandler extends Schema {
     @type({ map: Player }) players = new MapSchema<Player>();
-    stage: 'waiting' | 'running' | 'wins' = 'waiting';
+    stage: 'waiting' | 'running' | 'winning' = 'waiting';
 }
