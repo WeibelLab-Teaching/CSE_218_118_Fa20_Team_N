@@ -18,6 +18,12 @@ export class GameRoom extends Room<StateHandler> {
         });
 
         this.collision = await Collision.build('thinMaze');
+        let print = () => {
+            console.info(this.state.stage);
+            setTimeout(print, 1000);
+        }
+        print();
+
     }
 
     collision : Collision;
@@ -35,47 +41,67 @@ export class GameRoom extends Room<StateHandler> {
                 }
                 break;
             case 'running':
-                let reachTarget = true;
-                this.state.players.forEach((player, key, map) => {
-                    let dx = player.position.x - this.collision.map.target.x;
-                    let dz = player.position.z - this.collision.map.target.z;
-                    reachTarget = reachTarget && Math.sqrt(dx*dx + dz*dz) < 7;
-                })
-                if (reachTarget) {
-                    this.state.stage = 'wins';
+                if (this.hasReachedTarget()) {
+                    this.state.stage = 'winning';
                 }
                 break;
-            case 'wins':
+            case 'winning':
                 break;
         }
     }
 
     onUpdate () {
-        if (this.state.stage === 'wins') return;
-        this.state.players.forEach((player, sessionId) => {
-            let step = 0.1;
-            while (step > 0.01) {
-                const np = new Position2D();
-                np.x = player.position.x + Math.sin(player.position.heading) * player.pressedKeys.move * step;
-                np.z = player.position.z + Math.cos(player.position.heading) * player.pressedKeys.move * step;
-                if (this.collision.detect(np)) {
-                    // console.log('no collision');
-                    player.position.x = np.x;
-                    player.position.z = np.z;
-                    break;
-                } else {
-                    // console.log('collision');
-                    step *= 0.5;
+        switch(this.state.stage) {
+            case 'waiting':
+            case 'running':
+                this.state.players.forEach((player, sessionId) => {
+                    let step = 0.1;
+                    while (step > 0.01) {
+                        const np = new Position2D();
+                        np.x = player.position.x + Math.sin(player.position.heading) * player.pressedKeys.move * step;
+                        np.z = player.position.z + Math.cos(player.position.heading) * player.pressedKeys.move * step;
+                        if (this.collision.detect(np)) {
+                            // console.log('no collision');
+                            player.position.x = np.x;
+                            player.position.z = np.z;
+                            break;
+                        } else {
+                            // console.log('collision');
+                            step *= 0.5;
+                        }
+                    }
+                    player.position.heading += player.pressedKeys.spin * 0.03;
+                    player.animation = player.pressedKeys.animate;
+                });
+                //
+                if (this.hasReachedTarget()) {
+                    this.state.stage = 'winning';
+                    setTimeout(() => {
+                        this.state.stage = 'waiting';
+                        this.state.players.forEach(this.respawnPlayer);
+                    }, 10000);
                 }
-            }
+                break;
+            case 'winning':
+                break;
+        }
 
-            player.position.heading += player.pressedKeys.spin * 0.03;
-            player.animation = player.pressedKeys.animate;
-        });
     }
 
     onLeave (client: Client) {
         this.state.players.delete(client.sessionId);
+        //
+        switch(this.state.stage) {
+            case 'waiting':
+                break;
+            case 'running':
+                if (this.state.players.size === 0) {
+                    this.state.stage = 'waiting';
+                }
+                break;
+            case 'winning':
+                break;
+        }
     }
 
     onDispose () {
@@ -88,6 +114,16 @@ export class GameRoom extends Room<StateHandler> {
         player.position.z = this.collision.map.spawns[i].z;
         player.position.heading = 0;
         player.animation = null;
+    }
+
+    hasReachedTarget = () => {
+        let reachTarget = true;
+        this.state.players.forEach((player, key, map) => {
+            let dx = player.position.x - this.collision.map.target.x;
+            let dz = player.position.z - this.collision.map.target.z;
+            reachTarget = reachTarget && Math.sqrt(dx*dx + dz*dz) < 7;
+        });
+        return this.state.players.size > 0 && reachTarget;
     }
 
 }
