@@ -3,6 +3,7 @@ import "../index.css";
 
 import * as BABYLON from "babylonjs";
 import Keycode from "keycode.js";
+import * as GUI from "babylonjs-gui";
 
 import {client } from "./network";
 import {ANIMATE} from "../types";
@@ -14,6 +15,8 @@ import { StateHandler } from "../../../server/src/rooms/StateHandler";
 import { PressedKeys } from "../../../server/src/entities/Player";
 import { Vector2, Vector3 } from "babylonjs";
 import 'babylonjs-loaders';
+import { text } from "body-parser";
+import { playerControlMenu} from "../utils/utils";
 
 
 export function createScene(canvas, engine){
@@ -64,16 +67,8 @@ export function createScene(canvas, engine){
         // scene.createDefaultEnvironment(); //default lights and texture
     });
 
-    // a different way to upload assets
-    // var assetsMan = new BABYLON.AssetsManager(scene);
-    // var meshTask = assetsMan.addMeshTask("","",,);
-    // meshTask.onSuccess = function(task){
-    //     task.loadedMeshes[0].position = new BABYLON.Vector3(0,0,0);
-    //     task.loadedMeshes.forEach(meshes=>{
-    //         meshes.material = brickMat;
-    //     })
-    // } 
-    //     assetsMan.load();
+    //Dialog for User to Know Available Actions
+    playerControlMenu();
 
 
     // Ground material
@@ -104,7 +99,7 @@ export function createScene(canvas, engine){
         const playerViews: {[id: string]: BABYLON.AbstractMesh} = {};
 
         //display name
-        room.state.
+        // room.state.
         
         room.state.players.onAdd = function(player, key) {
             var Walk:BABYLON.Animatable;
@@ -168,7 +163,7 @@ export function createScene(canvas, engine){
         });
 
         // Keyboard listeners
-        const keyboard: PressedKeys = { spin: 0, move: 0, animate:null };
+        const keyboard: PressedKeys = { spin: 0, move: 0, animate:null, menu:0 };
         window.addEventListener("keydown", function(e) {
             if (e.which === Keycode.A) {
                 keyboard.spin = -1;
@@ -180,9 +175,9 @@ export function createScene(canvas, engine){
             } else if (e.which === Keycode.S) {
                 keyboard.move = 1;
             } 
-            else if (e.which === Keycode.M){
-                keyboard.menu = 1;
-            }
+            // else if (e.which === Keycode.M){
+            //     keyboard.menu = 1;
+            // }
 
             room.send('key', keyboard);
         });

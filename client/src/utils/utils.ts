@@ -1,5 +1,6 @@
 
 import * as BABYLON from "babylonjs";
+
 import { Vector2, Vector3 } from "babylonjs";
 import * as GUI from "babylonjs-gui";
 import {createScene} from "../game/createScene";
@@ -8,62 +9,42 @@ var baseURL =  "https://raw.githubusercontent.com/WeibelLab-Teaching/CSE_218_118
 var mazeName1 = "mazes/thinMaze.glb";
 var mazeName2 = "mazes/hardMaze.babylon";
 
- export function _createPauseMenu() {
-        this.gamePaused = false;
+export function playerControlMenu(){
+    // GUI
+    var advancedTexture = GUI.AdvancedDynamicTexture.CreateFullscreenUI("UI");
 
-        const pauseMenu = new Rectangle();
-        pauseMenu.horizontalAlignment = Control.HORIZONTAL_ALIGNMENT_CENTER;
-        pauseMenu.verticalAlignment = Control.VERTICAL_ALIGNMENT_CENTER;
-        pauseMenu.height = 0.8;
-        pauseMenu.width = 0.5;
-        pauseMenu.thickness = 0;
-        pauseMenu.isVisible = false;
+    // make panel to host our text and define dimension
+    var panel = new GUI.StackPanel();   
+    panel.width=.20;
+    panel.height=.20;
+    
+    var text1 = new GUI.TextBlock("text1");
+    text1.fontFamily = "Helvetica";
+    text1.textWrapping = true;
+    
+    text1.text = "Player Controls:\nMove forward: W\nMove backward: S\n Spin Left: A  Spin Right: D";
+    // \n To start the game press Enter";
+    text1.color = "white";
+    text1.fontSize = "16px";
+    panel.addControl(text1);
 
-        //background image
-        const image = new Image("pause", "sprites/pause.jpeg");
-        pauseMenu.addControl(image);
+    //style for panel
+    var style = advancedTexture.createStyle();
+    panel.style = style;
+    
+    // background and set alignment
+    panel.background = 'black';
+    panel.alpha=.85;
+    panel.left = -40;
+    panel.horizontalAlignment=GUI.Control.HORIZONTAL_ALIGNMENT_LEFT;
+    panel.verticalAlignment=GUI.Control.VERTICAL_ALIGNMENT_TOP;
+    
+    // add panel to UI
+    advancedTexture.addControl(panel);   
+}
 
-        //stack panel for the buttons
-        const stackPanel = new StackPanel();
-        stackPanel.width = .83;
-        pauseMenu.addControl(stackPanel);
-
-        const resumeBtn = Button.CreateSimpleButton("resume", "RESUME");
-        resumeBtn.width = 0.18;
-        resumeBtn.height = "44px";
-        resumeBtn.color = "white";
-        resumeBtn.fontFamily = "Viga";
-        resumeBtn.paddingBottom = "14px";
-        resumeBtn.cornerRadius = 14;
-        resumeBtn.fontSize = "12px";
-        resumeBtn.textBlock.resizeToFit = true;
-        resumeBtn.horizontalAlignment = Control.HORIZONTAL_ALIGNMENT_LEFT;
-        resumeBtn.verticalAlignment = Control.VERTICAL_ALIGNMENT_CENTER;
-        stackPanel.addControl(resumeBtn);
-
-        this._pauseMenu = pauseMenu;
-
-        //when the button is down, make menu invisable and remove control of the menu
-        resumeBtn.onPointerDownObservable.add(() => {
-            this._pauseMenu.isVisible = false;
-            this._playerUI.removeControl(pauseMenu);
-            this.pauseBtn.isHitTestVisible = true;
-            
-            //game unpaused, our time is now reset
-            this.gamePaused = false;
-            this._startTime = new Date().getTime();
-
-            //--SOUNDS--
-            this._scene.getSoundByName("gameSong").play();
-            this._pause.stop();
-
-            if(this._sparkWarningSfx.isPaused) {
-                this._sparkWarningSfx.play();
-            }
-            this._sfx.play(); //play transition sound
-        });
-
-
+ export function _loadingStateDialog() {}
+ 
 export const rotateSmallMaze = (scene)=>{
     var brickMat = new BABYLON.StandardMaterial("brick",scene);
     brickMat.diffuseTexture  = new BABYLON.Texture("https://i.imgur.com/yn98ktz.png",scene);
@@ -159,13 +140,8 @@ export function mainMenu(scene,canvas,engine){
     //  button1.link
     advancedTexture.addControl(selectBox);
 
-	var transformGroup = new GUI.CheckboxGroup("Menu");
-	transformGroup.addCheckbox("Share Game ~IP", );
-    // transformGroup.addCheckbox("High", );
-
-
     var startMenu = new GUI.CheckboxGroup('Start');
-     startMenu.addCheckbox("Start Game", function (){
+     startMenu.addCheckbox("Join Game", function (){
         createScene(canvas,engine);
         console.log("start was pressed!");
      });
@@ -174,9 +150,7 @@ export function mainMenu(scene,canvas,engine){
     // choosePlayerGroup.addToGroupRadio()
 	
     //Add Available Options Here
-    selectBox.addGroup(transformGroup); //generate link
-    selectBox.addControl(button1); //startbutton
-    
+    selectBox.addControl(button1); //startbutton    
 }
 
 //dude?
