@@ -2,6 +2,7 @@
 import "../index.css";
 
 import * as BABYLON from "babylonjs";
+import * as GUI from "babylonjs-gui";
 import Keycode from "keycode.js";
 
 import {client } from "./network";
@@ -69,32 +70,7 @@ export function createScene(canvas, engine){
 
     var tempLMPath = "https://raw.githubusercontent.com/WeibelLab-Teaching/CSE_218_118_Fa20_Team_N/ad-landmarks/server/src/assets/landmarks/";
 
-    /*
-    var angel = BABYLON.SceneLoader.ImportMesh("", tempLMPath, 
-        "angel.stl",
-        scene, 
-        function(newMeshes){
-            newMeshes.forEach(function(mesh){
-                mesh.scaling = new BABYLON.Vector3(0.05,0.05,0.05);
-                mesh.position = new BABYLON.Vector3(22.11, 0, 20.9 );
-            })
-        } );
-    */
-
     loadLandmarks(scene);
-
-    //a different way to upload assets
-    // var assetsMan = new BABYLON.AssetsManager(scene);
-    // var meshTask = assetsMan.addMeshTask("","", baseURL,mazeName2);
-    // meshTask.onSuccess = function(task){
-    //     // var material_02 = scene.getMaterialByName('mat').set = new BABYLON.Color3(0,0,1)
-    //     task.loadedMeshes[0].position = new BABYLON.Vector3(0,0,0);
-    //     task.loadedMeshes.forEach(meshes=>{
-    //         meshes.material = brickMat;
-    //     })
-    // } 
-
-    // Ground material
     
     // Our built-in 'ground' shape. Params: name, width, depth, subdivs, scene
     var ground = BABYLON.Mesh.CreateGround("ground1", 100, 100, 2, scene);
@@ -120,7 +96,7 @@ export function createScene(canvas, engine){
     // Colyseus / Join Room
     client.joinOrCreate<StateHandler>("game").then(room => {
         const playerViews: {[id: string]: BABYLON.AbstractMesh} = {};
-
+        console.log("New room state:", room.state.stage);
         room.state.players.onAdd = function(player, key) {
             var Walk:BABYLON.Animatable;
 
@@ -128,7 +104,6 @@ export function createScene(canvas, engine){
                 function (newMeshes, particleSystems, skeletons) {
                     playerViews[key] = newMeshes[0];
                     Walk = scene.beginAnimation(skeletons[0], 0, 100, true, 2.0);
-                    console.log(newMeshes)
                     if (playerViews[key] != null) {
 
                         playerViews[key].rotation.y = Math.PI;
@@ -138,11 +113,6 @@ export function createScene(canvas, engine){
 
                 }
         );
-           
-
-            // Move the sphere upward 1/2 its height
-            // playerViews[key].position.set(player.position.x, player.position.y, player.position.z);
-            // playerViews[key].rotation.set(0, 0, 0);
 
             // Update player position based on changes from the server.
             player.position.onChange = () => {
@@ -183,7 +153,15 @@ export function createScene(canvas, engine){
         };
 
         room.onStateChange((state) => {
-            console.log("New room state:", state.toJSON());
+            //console.log("New room state:", state.toJSON());
+            if (state.stage == 'winning') {
+                var advancedTexture = GUI.AdvancedDynamicTexture.CreateFullscreenUI("UI");
+                var text1 = new GUI.TextBlock();
+                text1.text = "Congratualtions!\nYou made it!\nHave a nice holiday!";
+                text1.color = "green";
+                text1.fontSize = 36;
+                advancedTexture.addControl(text1); 
+            } 
         });
 
         // Keyboard listeners
