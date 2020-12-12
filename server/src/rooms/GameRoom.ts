@@ -1,5 +1,5 @@
 import { Room, Client } from "colyseus";
-
+import { User, verifyToken } from "@colyseus/social";
 import { StateHandler } from "./StateHandler";
 import { Player } from "../entities/Player";
 import { Position2D, Collision } from "../collision/Collision";
@@ -13,26 +13,44 @@ export class GameRoom extends Room<StateHandler> {
 
         this.onMessage("key", (client, message) => {
             if (this.state.players.has(client.sessionId)) {
+                
                 this.state.players.get(client.sessionId).pressedKeys = message;
             }
         });
-
+        
         this.collision = await Collision.build('thinMaze');
     }
-
+    
     collision : Collision;
-
-    onJoin (client) {
+    
+    //     //get user name from client
+    //     async onAuth(client, options) {
+        //     // verify token authenticity
+        //     const token = verifyToken(options.token);
+        
+        //     // query the user by its id
+        //     return await User.findById(token._id);
+        //   }
+        
+    onJoin (client,user) {
+        var host;
         switch(this.state.stage) {
             case 'waiting':
                 const player = new Player();
                 player.name = `Player ${ this.clients.length }`;
+                console.log("client ses",client.sessionId)
+                if (this.clients.length ==1){
+                    host = client.sessionId;
+                }
                 this.respawnPlayer(player);
                 this.state.players.set(client.sessionId, player);
+                console.log("state size-->",this.state.players)
+                // change here add button to force start
                 if (this.state.players.size === 2) {
                     this.state.stage = 'running';
                     this.state.players.forEach(this.respawnPlayer);
                 }
+                // if (this.state.players)
                 break;
             case 'running':
                 let reachTarget = true;
@@ -72,6 +90,7 @@ export class GameRoom extends Room<StateHandler> {
             player.position.heading += player.pressedKeys.spin * 0.03;
             player.animation = player.pressedKeys.animate;
         });
+        // if (this.state.player)    
     }
 
     onLeave (client: Client) {

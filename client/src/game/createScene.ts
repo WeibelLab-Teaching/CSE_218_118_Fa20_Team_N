@@ -6,6 +6,7 @@ import Keycode from "keycode.js";
 
 import {client } from "./network";
 import {ANIMATE} from "../types";
+import {name} from './displayName';
 
 // Re-using server-side types for networking
 // This is optional, but highly recommended
@@ -63,16 +64,17 @@ export function createScene(canvas, engine){
         // scene.createDefaultEnvironment(); //default lights and texture
     });
 
-    //a different way to upload assets
+    // a different way to upload assets
     // var assetsMan = new BABYLON.AssetsManager(scene);
-    // var meshTask = assetsMan.addMeshTask("","", baseURL,mazeName2);
+    // var meshTask = assetsMan.addMeshTask("","",,);
     // meshTask.onSuccess = function(task){
-    //     // var material_02 = scene.getMaterialByName('mat').set = new BABYLON.Color3(0,0,1)
     //     task.loadedMeshes[0].position = new BABYLON.Vector3(0,0,0);
     //     task.loadedMeshes.forEach(meshes=>{
     //         meshes.material = brickMat;
     //     })
     // } 
+    //     assetsMan.load();
+
 
     // Ground material
     
@@ -101,6 +103,9 @@ export function createScene(canvas, engine){
     client.joinOrCreate<StateHandler>("game").then(room => {
         const playerViews: {[id: string]: BABYLON.AbstractMesh} = {};
 
+        //display name
+        room.state.
+        
         room.state.players.onAdd = function(player, key) {
             var Walk:BABYLON.Animatable;
 
@@ -117,12 +122,8 @@ export function createScene(canvas, engine){
                     }
 
                 }
-        );
-           
+            );
 
-            // Move the sphere upward 1/2 its height
-            // playerViews[key].position.set(player.position.x, player.position.y, player.position.z);
-            // playerViews[key].rotation.set(0, 0, 0);
 
             // Update player position based on changes from the server.
             player.position.onChange = () => {
@@ -178,7 +179,11 @@ export function createScene(canvas, engine){
                 keyboard.animate = ANIMATE.WALK;
             } else if (e.which === Keycode.S) {
                 keyboard.move = 1;
+            } 
+            else if (e.which === Keycode.M){
+                keyboard.menu = 1;
             }
+
             room.send('key', keyboard);
         });
 

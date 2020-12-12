@@ -4,7 +4,12 @@ export interface PressedKeys {
     spin: number;
     move: number;
     animate: number;
+    menu: number;
 }
+// function createMenu(config:PressedKeys) {
+//     if (config.menu)
+// }
+
 
 export class Position extends Schema {
     @type("number") x: number = 0;
@@ -18,5 +23,9 @@ export class Player extends Schema {
     @type(Position) position = new Position();
     @type("number") animation: number;
 
-    pressedKeys: PressedKeys = { spin: 0, move: 0, animate: null };
+    pressedKeys: PressedKeys = { 
+        spin: 0, 
+        move: 0, animate: null,
+        menu:0
+     };
 }
