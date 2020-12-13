@@ -2,8 +2,8 @@
 import "../index.css";
 
 import * as BABYLON from "babylonjs";
-import Keycode from "keycode.js";
 import * as GUI from "babylonjs-gui";
+import Keycode from "keycode.js";
 
 import {client } from "./network";
 import {ANIMATE} from "../types";
@@ -52,6 +52,10 @@ export function createScene(canvas, engine){
     //import maze from github, and add to scene
     var baseURL =  "https://raw.githubusercontent.com/WeibelLab-Teaching/CSE_218_118_Fa20_Team_N/main/server/src/assets/";
     var mazeName1 = "mazes/thinMaze.glb";
+    // landmark paths and names
+    var lmpath = "landmarks/";
+    var internal_LMs = ["angel.stl", "nike.stl", "palm_tree.obj"];
+    var external_LMs = ["eiffel_tower.stl", "pyramid.stl"];
     
     var brickMat = new BABYLON.StandardMaterial("brick",scene);
     // brickMat.bumpTexture = new BABYLON.Texture("https://i.imgur.com/yn98ktz.png",scene);
@@ -72,6 +76,9 @@ export function createScene(canvas, engine){
 
 
     // Ground material
+    var tempLMPath = "https://raw.githubusercontent.com/WeibelLab-Teaching/CSE_218_118_Fa20_Team_N/ad-landmarks/server/src/assets/landmarks/";
+
+    loadLandmarks(scene);
     
     // Our built-in 'ground' shape. Params: name, width, depth, subdivs, scene
     var ground = BABYLON.Mesh.CreateGround("ground1", 100, 100, 2, scene);
@@ -97,10 +104,7 @@ export function createScene(canvas, engine){
     // Colyseus / Join Room
     client.joinOrCreate<StateHandler>("game").then(room => {
         const playerViews: {[id: string]: BABYLON.AbstractMesh} = {};
-
-        //display name
-        // room.state.
-        
+        console.log("New room state:", room.state.stage);
         room.state.players.onAdd = function(player, key) {
             var Walk:BABYLON.Animatable;
 
@@ -108,7 +112,6 @@ export function createScene(canvas, engine){
                 function (newMeshes, particleSystems, skeletons) {
                     playerViews[key] = newMeshes[0];
                     Walk = scene.beginAnimation(skeletons[0], 0, 100, true, 2.0);
-                    console.log(newMeshes)
                     if (playerViews[key] != null) {
 
                         playerViews[key].rotation.y = Math.PI;
@@ -117,8 +120,7 @@ export function createScene(canvas, engine){
                     }
 
                 }
-            );
-
+        );
 
             // Update player position based on changes from the server.
             player.position.onChange = () => {
@@ -176,11 +178,18 @@ export function createScene(canvas, engine){
                 text1.color = "green";
                 text1.fontSize = 36;
                 advancedTexture1.addControl(text1); 
-            } 
-        });
+            // if (state.stage == 'winning') {
+            //     advancedTexture1.removeControl(text1)
+            //     text1.text = "Congratualtions!\nYou made it!\nHave a nice holiday!";
+            //     text1.color = "green";
+            //     text1.fontSize = 36;
+            //     advancedTexture1.addControl(text1); 
+            // } 
+        }
+    });
 
         // Keyboard listeners
-        const keyboard: PressedKeys = { spin: 0, move: 0, animate:null, menu:0 };
+        const keyboard: PressedKeys = { spin: 0, move: 0, animate:null, start:0 };
         window.addEventListener("keydown", function(e) {
             if (e.which === Keycode.A) {
                 keyboard.spin = -1;
@@ -193,7 +202,7 @@ export function createScene(canvas, engine){
                 keyboard.move = 1;
             } 
             else if (e.which === Keycode.M){
-                keyboard.menu = 1;
+                keyboard.start = 1;
             }
 
             room.send('key', keyboard);
@@ -211,7 +220,7 @@ export function createScene(canvas, engine){
                 keyboard.move = 0;
             }
             else if (e.which === Keycode.M){
-                keyboard.menu = 1;
+                keyboard.start = 0;
             }
             keyboard.animate = null;
             room.send('key', keyboard);
@@ -233,4 +242,58 @@ export function createScene(canvas, engine){
         scene.render();
     });
 
+}
+function loadLandmarks(scene){
+    var tempLMPath = "https://raw.githubusercontent.com/WeibelLab-Teaching/CSE_218_118_Fa20_Team_N/ad-landmarks/server/src/assets/landmarks/";
+
+    var angel = BABYLON.SceneLoader.ImportMesh("", tempLMPath, 
+        "angel.stl",
+        scene, 
+        function(newMeshes){
+            newMeshes.forEach(function(mesh){
+                mesh.scaling = new BABYLON.Vector3(0.05,0.05,0.05);
+                mesh.position = new BABYLON.Vector3(22.11, 0, 20.9 );
+            })
+        } );
+
+    var nike = BABYLON.SceneLoader.ImportMesh("", tempLMPath, 
+        "nike.stl",
+        scene, 
+        function(newMeshes){
+            newMeshes.forEach(function(mesh){
+                mesh.scaling = new BABYLON.Vector3(0.04,0.04,0.04);
+                mesh.position = new BABYLON.Vector3(14.76, 0, -29.5);
+            })
+        } );
+
+    var palm = BABYLON.SceneLoader.ImportMesh("", tempLMPath, 
+        "palm_tree.obj",
+        scene, 
+        function(newMeshes){
+            newMeshes.forEach(function(mesh){
+                mesh.scaling = new BABYLON.Vector3(0.5,0.5,0.5);
+                mesh.position = new BABYLON.Vector3(-11.0899, 0, -4.602);
+            })
+        } );
+
+    var pyramid = BABYLON.SceneLoader.ImportMesh("", tempLMPath, 
+        "pyramid.stl",
+        scene, 
+        function(newMeshes){
+            newMeshes.forEach(function(mesh){
+                
+                mesh.position = new BABYLON.Vector3(5.06, 0, 100);
+            })
+        } );
+    
+    var tower = BABYLON.SceneLoader.ImportMesh("", tempLMPath, 
+        "eiffel_tower.stl",
+        scene, 
+        function(newMeshes){
+            newMeshes.forEach(function(mesh){
+                mesh.rotation = new BABYLON.Vector3(-3.14/2, 0 , 0);
+                mesh.scaling = new BABYLON.Vector3(0.8,0.8,0.8);
+                mesh.position = new BABYLON.Vector3(-7.5, 0, -50);
+            })
+        } );
 }

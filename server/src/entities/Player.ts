@@ -4,7 +4,7 @@ export interface PressedKeys {
     spin: number;
     move: number;
     animate: number;
-    menu: number;
+    start: number;
 }
 
 
@@ -24,6 +24,6 @@ export class Player extends Schema {
     pressedKeys: PressedKeys = { 
         spin: 0, 
         move: 0, animate: null,
-        menu:0
+        start:0
      };
 }
