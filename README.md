@@ -63,7 +63,8 @@ Inside this repository, there's two separate applications. The client (babylonjs
 
 #### Server application
 
-For the server, the steps are exactly the same. Install the dependencies:
+To be able to build the server application, you'll need to enter in the folder,
+and install its dependencies first.
 
 ```
 cd CSE_218_118_Fa20_Team_N/server
@@ -80,8 +81,7 @@ It will spawn a web socket server, listening on [ws://localhost:2657](ws://local
 
 #### Client application
 
-To be able to build the client application, you'll need to enter in the folder,
-and install its dependencies first.
+For the client, the steps are exactly the same. Install the dependencies:
 
 ```
 cd CSE_218_118_Fa20_Team_N/client
