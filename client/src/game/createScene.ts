@@ -166,9 +166,10 @@ export function createScene(canvas, engine){
             console.log("New room state:", state.toJSON());
             var advancedTexture1 = GUI.AdvancedDynamicTexture.CreateFullscreenUI("UI");
             var text1 = new GUI.TextBlock();
+            var text2 = new GUI.TextBlock();
             
             if (state.stage == 'waiting') {
-                advancedTexture1.removeControl(text1)
+                // advancedTexture1.removeControl(text1)
                 text1.text = "Waiting state..";
                 text1.color = "green";
                 text1.fontSize = 36;
@@ -176,10 +177,12 @@ export function createScene(canvas, engine){
             } 
              if (state.stage == 'running') {
                 advancedTexture1.removeControl(text1)
-                text1.text = "Running state..";
-                text1.color = "green";
-                text1.fontSize = 36;
-                advancedTexture1.addControl(text1); 
+                text2.text = "Running state..";
+                text2.color = "red";
+                text2.verticalAlignment= GUI.Control.VERTICAL_ALIGNMENT_TOP;
+                text2.fontSize = 36;
+                advancedTexture1.addControl(text2); 
+            }
             // if (state.stage == 'winning') {
             //     advancedTexture1.removeControl(text1)
             //     text1.text = "Congratualtions!\nYou made it!\nHave a nice holiday!";
@@ -187,11 +190,11 @@ export function createScene(canvas, engine){
             //     text1.fontSize = 36;
             //     advancedTexture1.addControl(text1); 
             // } 
-        }
+        
+        });
         room.state.players.onChange = (player, key) => {
             console.log(player, "have changes at", key);
         };
-    });
 
         // Keyboard listeners
         const keyboard: PressedKeys = { spin: 0, move: 0, animate:null, start:0 };

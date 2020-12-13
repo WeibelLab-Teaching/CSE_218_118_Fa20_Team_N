@@ -7,13 +7,13 @@ import { Position2D, Collision } from "../collision/Collision";
 export class GameRoom extends Room<StateHandler> {
     maxClients = 8;
     hostId ;
-    hostPlayer;
     async onCreate (options) {
         this.setSimulationInterval(() => this.onUpdate());
         this.setState(new StateHandler());
 
          this.onMessage("key", (client, message) => {
             this.state.players.get(client.sessionId).pressedKeys = message;
+            // console.log("message", message)
         });
 
         this.collision = await Collision.build('thinMaze');
@@ -35,19 +35,18 @@ export class GameRoom extends Room<StateHandler> {
                 player.name = `Player ${ this.clients.length }`;
                 if(player.name==='Player 1'){
                     this.hostId=client.sessionId;
-                    this.hostPlayer =this.state.players.get(this.hostId);
+                    console.log("host =",this.hostId)
                 }
-                console.log("host =",this.hostId)
                 this.respawnPlayer(player);
                 this.state.players.set(client.sessionId, player);
                 console.log("size =",this.state.players.size)
-                console.log("inside  =",this.state.players.get(this.hostId).name)
-                if (this.state.players.size === 2){
+                if (this.state.players.size === 3){
                     this.state.stage = 'running';
                     this.state.players.forEach(this.respawnPlayer);
                 }
                 break;
             case 'running':
+                console.log("in running state")
                 if (this.hasReachedTarget()) {
                     this.state.stage = 'winning';
                 }
@@ -79,20 +78,23 @@ export class GameRoom extends Room<StateHandler> {
                     }
                     player.position.heading += player.pressedKeys.spin * 0.03;
                     player.animation = player.pressedKeys.animate;
-                });
-                this.state.players.onChange = (player,key) =>{
-                    console.log(player, "have changes at ", key);
-                }
-                if(this.hostPlayer){
 
-                    if (this.hostPlayer.pressedKeys.start === 1 ){
-                        console.log('pressed s')
-                        this.state.stage = 'running';
-                        // respawn= true;
-                        this.state.players.forEach(this.respawnPlayer);
+                    if(sessionId == this.hostId){
+                        // player.start = 
+                        if(player.pressedKeys.start ===1){
+                                    console.log('pressed M')
+                                    this.state.stage = 'running';
+                                            respawn= true;
+
+                        }
+
                     }
+                });
+                
+                if (respawn ){
+                    this.state.players.forEach(this.respawnPlayer);
+                    respawn = false;
                 }
-
                 break;
             case 'running':
                 this.state.players.forEach((player, sessionId) => {

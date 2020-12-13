@@ -20,6 +20,7 @@ export class Player extends Schema {
     @type("string") name: string;
     @type(Position) position = new Position();
     @type("number") animation: number;
+    @type("number") start: number;
 
     pressedKeys: PressedKeys = { 
         spin: 0, 
