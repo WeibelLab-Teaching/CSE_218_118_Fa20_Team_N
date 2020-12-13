@@ -105,8 +105,10 @@ export function createScene(canvas, engine){
     client.joinOrCreate<StateHandler>("game").then(room => {
         const playerViews: {[id: string]: BABYLON.AbstractMesh} = {};
         console.log("New room state:", room.state.stage);
+
         room.state.players.onAdd = function(player, key) {
             var Walk:BABYLON.Animatable;
+            console.log(player, "has been added at", key);
 
             BABYLON.SceneLoader.ImportMesh("him", baseURL + "players/", "Dude.babylon", scene,
                 function (newMeshes, particleSystems, skeletons) {
@@ -186,6 +188,9 @@ export function createScene(canvas, engine){
             //     advancedTexture1.addControl(text1); 
             // } 
         }
+        room.state.players.onChange = (player, key) => {
+            console.log(player, "have changes at", key);
+        };
     });
 
         // Keyboard listeners

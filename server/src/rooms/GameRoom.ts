@@ -79,16 +79,20 @@ export class GameRoom extends Room<StateHandler> {
                     }
                     player.position.heading += player.pressedKeys.spin * 0.03;
                     player.animation = player.pressedKeys.animate;
-                    if(this.hostPlayer){
-
-                        if(this.hostPlayer.pressedKeys.start === 1 ){
-                            console.log('pressed s')
-                            this.state.stage = 'running';
-                            // respawn= true;
-                            this.state.players.forEach(this.respawnPlayer);
-                        }
-                    }
                 });
+                this.state.players.onChange = (player,key) =>{
+                    console.log(player, "have changes at ", key);
+                }
+                if(this.hostPlayer){
+
+                    if (this.hostPlayer.pressedKeys.start === 1 ){
+                        console.log('pressed s')
+                        this.state.stage = 'running';
+                        // respawn= true;
+                        this.state.players.forEach(this.respawnPlayer);
+                    }
+                }
+
                 break;
             case 'running':
                 this.state.players.forEach((player, sessionId) => {
