@@ -6,9 +6,7 @@ export interface PressedKeys {
     animate: number;
     menu: number;
 }
-// function createMenu(config:PressedKeys) {
-//     if (config.menu)
-// }
+
 
 
 export class Position extends Schema {

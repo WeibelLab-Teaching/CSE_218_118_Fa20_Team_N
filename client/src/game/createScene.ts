@@ -160,6 +160,23 @@ export function createScene(canvas, engine){
 
         room.onStateChange((state) => {
             console.log("New room state:", state.toJSON());
+            var advancedTexture1 = GUI.AdvancedDynamicTexture.CreateFullscreenUI("UI");
+            var text1 = new GUI.TextBlock();
+            
+            if (state.stage == 'waiting') {
+                advancedTexture1.removeControl(text1)
+                text1.text = "Waiting state..";
+                text1.color = "green";
+                text1.fontSize = 36;
+                advancedTexture1.addControl(text1);
+            } 
+             if (state.stage == 'running') {
+                advancedTexture1.removeControl(text1)
+                text1.text = "Running state..";
+                text1.color = "green";
+                text1.fontSize = 36;
+                advancedTexture1.addControl(text1); 
+            } 
         });
 
         // Keyboard listeners
@@ -175,9 +192,9 @@ export function createScene(canvas, engine){
             } else if (e.which === Keycode.S) {
                 keyboard.move = 1;
             } 
-            // else if (e.which === Keycode.M){
-            //     keyboard.menu = 1;
-            // }
+            else if (e.which === Keycode.M){
+                keyboard.menu = 1;
+            }
 
             room.send('key', keyboard);
         });
@@ -192,6 +209,9 @@ export function createScene(canvas, engine){
 
             } else if (e.which === Keycode.S) {
                 keyboard.move = 0;
+            }
+            else if (e.which === Keycode.M){
+                keyboard.menu = 1;
             }
             keyboard.animate = null;
             room.send('key', keyboard);
