@@ -55,6 +55,24 @@ The client (user) sits in the middle of the data flow. For the audio chat part, 
 
 TODO ADD LINKS TO REPOSITORY STRUCTURE + MAIN COMPONENTS. NEED REFACTORING TO BE DONE BEFORE EDITING
 
+Our repository structure is divided into two main directories:
+- [server](./server)
+- [client](./client)
+The [readme_pics](./readme_pics) directory just contains the pictures rendered in this README.
+
+Both the `server` and `client` directories have their own `package.json` as they are two environments saparate from each other, as outlined in the architecture diagrams.
+
+The relevant files of `server` are all stored in `server/src`:
+- [index.ts](./server/src/index.ts) - is the main driver for the server code
+- [assets/](./server/src/assets) - the graphic components of the game, like the maze itself, the avatars used to represent the players, and the landmarks
+- [audio/Signaling.ts](./server/src/audio/Signaling.ts) - the WebRTC logic
+- [collision/Collision.ts](./server/src/collision/Collision.ts) - the logic for collision detection (when a player collides against a wall)
+- [entities/Player.ts](./server/src/entities/Player.ts) - stores the properties of a player (like its coordinates)
+- [rooms/](./server/src/rooms/) - contains the main game room logic inside `GameRoom.ts`, and defines the game room states inside `StateHandler.ts`
+
+Equivalently, the main files of `client` are all stored in `client/src`:
+
+
 ### How to run locally
 
 Check out this repository.
