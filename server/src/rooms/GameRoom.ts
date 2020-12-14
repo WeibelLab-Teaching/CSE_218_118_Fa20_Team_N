@@ -39,8 +39,7 @@ export class GameRoom extends Room<StateHandler> {
                 }
                 this.respawnPlayer(player);
                 this.state.players.set(client.sessionId, player);
-                console.log("size =",this.state.players.size)
-                if (this.state.players.size === 3){
+                if (this.state.players.size === 4) {
                     this.state.stage = 'running';
                     this.state.players.forEach(this.respawnPlayer);
                 }
@@ -80,7 +79,7 @@ export class GameRoom extends Room<StateHandler> {
                     player.animation = player.pressedKeys.animate;
 
                     if(sessionId == this.hostId){
-                        // player.start = 
+                        // player.start =
                         if(player.pressedKeys.start ===1){
                                     console.log('pressed M')
                                     this.state.stage = 'running';
@@ -90,7 +89,7 @@ export class GameRoom extends Room<StateHandler> {
 
                     }
                 });
-                
+
                 if (respawn ){
                     this.state.players.forEach(this.respawnPlayer);
                     respawn = false;
