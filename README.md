@@ -77,7 +77,7 @@ Now you can build and run it by running:
 npm start
 ```
 
-It will spawn a web socket server, listening on [ws://localhost:2657](ws://localhost:2657).
+It will spawn two web socket servers, listening on [ws://localhost:2657](ws://localhost:2657) and [ws://localhost:2658](ws://localhost:2658).
 
 #### Client application
 
@@ -106,15 +106,15 @@ Our team is composed of:
 
 - **Jocelyn Alvarez**,
 - **Arnold De Guzman**,
-- **Fan Jin**,
+- **Fan Jin**, M.S in computer science (UCSD class of 2021), born and raised in China and earned bachelor’s degree from Tsinghua. After graduation, he will become a software engineer at Amazon in Seattle. He loves music and traveling
 - **Alberto Nencioni**, M.S. in Computer Science (UCSD Class of 2022) with specialization in Systems; born and raised in Italy, he moved to the U.S. for his undergraduate at UCSD, which he completed in 2020
-- **Shanshan Xiao**,
+- **Shanshan Xiao**, M.S. in Computer Science (UCSD Class of 2021) with specialization in A.I.; born and raised in China, she will graduate this quarter and move to  the Bay Area
 
 These same students are responsible for maintaining the project.
 
 ## How to get help
 
-If you have questions about this project, you can reach out to TODO. If you have more general questions about the tools we used, you can visit these links:
+If you have questions about this project, you can reach out to Alberto at anencion@ucsd.edu or TODO. If you have more general questions about the tools we used, you can visit these links:
 
 - [Babylon.js](https://doc.babylonjs.com/)
 - [Colyseus](https://docs.colyseus.io/)
