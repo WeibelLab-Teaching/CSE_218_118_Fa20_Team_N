@@ -18,7 +18,8 @@ This is why we decided to build a game that would allow people to find something
 
 Here you can see two storyboards to represent the core features of our application: a user walking around the maze, the ability to communicate with the other players, and the landmarks inside and outside of the maze.
 
-TODO ADD STORYBOARDS HERE
+![Storyboard 1](./readme_pics/storyboard1.png)
+![Storyboard 2](./readme_pics/storyboard2.png)
 
 ### Features
 
