@@ -35,7 +35,7 @@ export class GameRoom extends Room<StateHandler> {
                 player.name = `Player ${ this.clients.length }`;
                 this.respawnPlayer(player);
                 this.state.players.set(client.sessionId, player);
-                if (this.state.players.size === 2) {
+                if (this.state.players.size === 4) {
                     this.state.stage = 'running';
                     this.state.players.forEach(this.respawnPlayer);
                 }
