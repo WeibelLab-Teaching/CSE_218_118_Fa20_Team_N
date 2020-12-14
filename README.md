@@ -41,13 +41,13 @@ TODO ADD PICTURES
 
 This project uses Babylon.js to render the game environment, and Colyseus for the multiplayer game logic. The audio communication is implemented using WebRTC.
 
-TODO ADD FIRST DIAGRAM
+![Architecture Diagram](./readme_pics/architecture.png)
 
 On the server side, we have two servers both running on Node.js. We have a game server consisting of two modules, one module providing audio chat functionality with WebRTC, the other one implementing the game logic with Colyseus. Colyseus is a framework that provides state synchronization between different clients. The second server is the web server, which simply hosts the client's JavaScript code. Both servers are hosted on the same Amazon EC2 instance when demoing remotely.
 
 Both client and server code is written in TypeScript.
 
-TODO ADD SECOND DIAGRAM
+![Dataflow Diagram](./readme_pics/dataflow.png)
 
 The client (user) sits in the middle of the data flow. For the audio chat part, the clients will send a WebRTC signal to the WebRTC server, which will respond with the other clients' port and address information. Then, the clients will establish a peer-to-peer connection with each other, without further need to talk to the WebRTC server. For the game state synchronization part, the clients will post their actions (e.g. keyboard presses) to the Colyseus server, which runs the game logic. The server will then calculate the new state and push it to the clients. It is important to note there is only one authoritative game logic running on the server: the action is going one-direction from client(s) to server, the updated state is also going one-direction from server to clients.
 
