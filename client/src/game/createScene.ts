@@ -7,6 +7,7 @@ import Keycode from "keycode.js";
 
 import {client } from "./network";
 import {ANIMATE} from "../types";
+import {name} from './displayName';
 
 // Re-using server-side types for networking
 // This is optional, but highly recommended
@@ -14,6 +15,8 @@ import { StateHandler } from "../../../server/src/rooms/StateHandler";
 import { PressedKeys } from "../../../server/src/entities/Player";
 import { Vector2, Vector3 } from "babylonjs";
 import 'babylonjs-loaders';
+import { text } from "body-parser";
+import { playerControlMenu} from "../utils/utils";
 
 
 export function createScene(canvas, engine){
@@ -68,6 +71,11 @@ export function createScene(canvas, engine){
         // scene.createDefaultEnvironment(); //default lights and texture
     });
 
+    //Dialog for User to Know Available Actions
+    playerControlMenu();
+
+
+    // Ground material
     var tempLMPath = "https://raw.githubusercontent.com/WeibelLab-Teaching/CSE_218_118_Fa20_Team_N/ad-landmarks/server/src/assets/landmarks/";
 
     loadLandmarks(scene);
@@ -97,8 +105,10 @@ export function createScene(canvas, engine){
     client.joinOrCreate<StateHandler>("game").then(room => {
         const playerViews: {[id: string]: BABYLON.AbstractMesh} = {};
         console.log("New room state:", room.state.stage);
+
         room.state.players.onAdd = function(player, key) {
             var Walk:BABYLON.Animatable;
+            console.log(player, "has been added at", key);
 
             BABYLON.SceneLoader.ImportMesh("him", baseURL + "players/", "Dude.babylon", scene,
                 function (newMeshes, particleSystems, skeletons) {
@@ -153,19 +163,41 @@ export function createScene(canvas, engine){
         };
 
         room.onStateChange((state) => {
-            //console.log("New room state:", state.toJSON());
-            if (state.stage == 'winning') {
-                var advancedTexture = GUI.AdvancedDynamicTexture.CreateFullscreenUI("UI");
-                var text1 = new GUI.TextBlock();
-                text1.text = "Congratualtions!\nYou made it!\nHave a nice holiday!";
+            console.log("New room state:", state.toJSON());
+            var advancedTexture1 = GUI.AdvancedDynamicTexture.CreateFullscreenUI("UI");
+            var text1 = new GUI.TextBlock();
+            var text2 = new GUI.TextBlock();
+            
+            if (state.stage == 'waiting') {
+                // advancedTexture1.removeControl(text1)
+                text1.text = "Waiting state..";
                 text1.color = "green";
                 text1.fontSize = 36;
-                advancedTexture.addControl(text1); 
+                advancedTexture1.addControl(text1);
             } 
+             if (state.stage == 'running') {
+                advancedTexture1.removeControl(text1)
+                text2.text = "Running state..";
+                text2.color = "red";
+                text2.verticalAlignment= GUI.Control.VERTICAL_ALIGNMENT_TOP;
+                text2.fontSize = 36;
+                advancedTexture1.addControl(text2); 
+            }
+            // if (state.stage == 'winning') {
+            //     advancedTexture1.removeControl(text1)
+            //     text1.text = "Congratualtions!\nYou made it!\nHave a nice holiday!";
+            //     text1.color = "green";
+            //     text1.fontSize = 36;
+            //     advancedTexture1.addControl(text1); 
+            // } 
+        
         });
+        room.state.players.onChange = (player, key) => {
+            console.log(player, "have changes at", key);
+        };
 
         // Keyboard listeners
-        const keyboard: PressedKeys = { spin: 0, move: 0, animate:null };
+        const keyboard: PressedKeys = { spin: 0, move: 0, animate:null, start:0 };
         window.addEventListener("keydown", function(e) {
             if (e.which === Keycode.A) {
                 keyboard.spin = -1;
@@ -176,7 +208,11 @@ export function createScene(canvas, engine){
                 keyboard.animate = ANIMATE.WALK;
             } else if (e.which === Keycode.S) {
                 keyboard.move = 1;
+            } 
+            else if (e.which === Keycode.M){
+                keyboard.start = 1;
             }
+
             room.send('key', keyboard);
         });
 
@@ -190,6 +226,9 @@ export function createScene(canvas, engine){
 
             } else if (e.which === Keycode.S) {
                 keyboard.move = 0;
+            }
+            else if (e.which === Keycode.M){
+                keyboard.start = 0;
             }
             keyboard.animate = null;
             room.send('key', keyboard);

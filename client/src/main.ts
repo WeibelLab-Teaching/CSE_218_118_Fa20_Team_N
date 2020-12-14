@@ -2,6 +2,7 @@ import * as BABYLON from "babylonjs";
 import {rotateSmallMaze, mainMenu, impotDude} from './utils/utils'
 import "./index.css";
 import { audio_init } from './audio/audio';
+import {createScene} from './game/createScene';
 
 
 const canvas = document.getElementById('game') as HTMLCanvasElement;
