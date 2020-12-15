@@ -166,7 +166,7 @@ export function createScene(canvas, engine){
             console.log("New room state:", state.toJSON());
             var advancedTexture1 = GUI.AdvancedDynamicTexture.CreateFullscreenUI("UI");
             var text1 = new GUI.TextBlock();
-            var text2 = new GUI.TextBlock();
+            // var text2 = new GUI.TextBlock();
             
             // if (state.stage == 'waiting') {
             //     // advancedTexture1.removeControl(text1)
