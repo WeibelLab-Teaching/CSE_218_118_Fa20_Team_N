@@ -34,7 +34,6 @@ Users can communicate with the rest of the team and look at the landmarks to fin
 - Users can interact with each other
 - The maze has a finish point
 - Each user needs to reach the finish point in order to win
-- Users spawn in different spots of the maze
 - The maze has landmarks to aid the players
 
 ![Start Menu](./readme_pics/startmenu.png)
@@ -46,6 +45,8 @@ Users can communicate with the rest of the team and look at the landmarks to fin
 ![Player 2](./readme_pics/player2.png)
 
 ![Landmark](./readme_pics/landmark.png)
+
+![Victory](./readme_pics/victory.png)
 
 ### Architecture and Data Flow
 
@@ -146,7 +147,7 @@ This project was developed between October and December 2020 by Team N for the j
 Our team is composed of:
 
 - **Jocelyn Alvarez**,
-- **Arnold De Guzman**,
+- **Arnold De Guzman**, B.S. in Computer Engineering (UCSD Class of 2021), born in the Philippines and raised in San Diego. Interested in computer graphics and solving puzzles
 - **Fan Jin**, M.S in computer science (UCSD class of 2021), born and raised in China and earned bachelor’s degree from Tsinghua. After graduation, he will become a software engineer at Amazon in Seattle. He loves music and traveling
 - **Alberto Nencioni**, M.S. in Computer Science (UCSD Class of 2022) with specialization in Systems; born and raised in Italy, he moved to the U.S. for his undergraduate at UCSD, which he completed in 2020
 - **Shanshan Xiao**, M.S. in Computer Science (UCSD Class of 2021) with specialization in A.I.; born and raised in China, she will graduate this quarter and move to  the Bay Area
