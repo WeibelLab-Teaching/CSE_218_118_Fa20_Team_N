@@ -12,7 +12,9 @@ export class GameRoom extends Room<StateHandler> {
         this.setState(new StateHandler());
 
          this.onMessage("key", (client, message) => {
-            this.state.players.get(client.sessionId).pressedKeys = message;
+            if (this.state.players.has(client.sessionId)) {
+                this.state.players.get(client.sessionId).pressedKeys = message;
+            }
             // console.log("message", message)
         });
 
