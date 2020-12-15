@@ -300,7 +300,8 @@ function loadLandmarks(scene){
                 mesh.position = new BABYLON.Vector3(-11.0899, 0, -4.602);
             })
         } );
-
+    var yellowMat = new BABYLON.StandardMaterial('pyramid',scene);
+    yellowMat.diffuseColor =  new BABYLON.Color3(0.51, 0.5, 0.09);
     var pyramid = BABYLON.SceneLoader.ImportMesh("", tempLMPath,
         "pyramid.stl",
         scene,
@@ -308,9 +309,11 @@ function loadLandmarks(scene){
             newMeshes.forEach(function(mesh){
 
                 mesh.position = new BABYLON.Vector3(5.06, 0, 100);
+                mesh.material= yellowMat;
             })
         } );
-
+    var towerMat = new BABYLON.StandardMaterial('pyramid',scene);
+    towerMat.diffuseColor =  new BABYLON.Color3(0.32, 0.05, 0.26);
     var tower = BABYLON.SceneLoader.ImportMesh("", tempLMPath,
         "eiffel_tower.stl",
         scene,
@@ -319,6 +322,7 @@ function loadLandmarks(scene){
                 mesh.rotation = new BABYLON.Vector3(-3.14/2, 0 , 0);
                 mesh.scaling = new BABYLON.Vector3(0.8,0.8,0.8);
                 mesh.position = new BABYLON.Vector3(-7.5, 0, -50);
+                mesh.material =towerMat;
             })
         } );
 }
