@@ -66,9 +66,9 @@ export function createScene(canvas, engine){
     
     var maze =BABYLON.SceneLoader.ImportMesh("", baseURL, mazeName1, scene, function(meshes){
         // apply my own materials
-        meshes[1].material = brickMat;
+        // meshes[1].material = brickMat;
         meshes[1].checkCollisions = true;
-        // scene.createDefaultEnvironment(); //default lights and texture
+        scene.createDefaultEnvironment(); //default lights and texture
     });
 
     //Dialog for User to Know Available Actions
@@ -164,7 +164,7 @@ export function createScene(canvas, engine){
         };
 
         room.onStateChange((state) => {
-            console.log("New room state:", state.toJSON());
+            // console.log("New room state:", state.toJSON());
             // var text2 = new GUI.TextBlock();
             
             // if (state.stage == 'waiting') {
@@ -191,7 +191,9 @@ export function createScene(canvas, engine){
                 text1.fontSize = 36;
                 advancedTexture1.addControl(text1); 
             } 
+            // advancedTexture1.removeControl(text1)
             currentRoomState = state.stage;
+
         });
         room.state.players.onChange = (player, key) => {
             console.log(player, "have changes at", key);
