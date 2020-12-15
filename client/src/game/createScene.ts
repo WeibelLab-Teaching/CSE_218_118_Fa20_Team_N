@@ -194,7 +194,7 @@ export function createScene(canvas, engine){
                     advancedTexture1.addControl(text1);
                 } else if (state.stage == 'waiting') {
                     advancedTexture1.removeControl(text1)
-                    text1.text = "Waiting for others to join";
+                    text1.text = "Waiting for others to join...\n Please press m to start";
                     text1.color = "green";
                     text1.fontSize = 36;
                     advancedTexture1.addControl(text1);
