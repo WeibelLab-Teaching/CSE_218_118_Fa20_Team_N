@@ -81,7 +81,7 @@ export class GameRoom extends Room<StateHandler> {
                     player.position.heading += player.pressedKeys.spin * 0.03;
                     player.animation = player.pressedKeys.animate;
 
-                    if(sessionId == this.hostId){
+                    if(true || sessionId == this.hostId){
                         // player.start =
                         if(player.pressedKeys.start ===1){
                                     console.log('pressed M')
@@ -126,7 +126,7 @@ export class GameRoom extends Room<StateHandler> {
                         this.state.stage = 'waiting';
                         // this.state.players.forEach(this.respawnPlayer);
                         this.state.players.clear();
-                    }, 3000);
+                    }, 10000);
                 }
                 break;
             case 'winning':
