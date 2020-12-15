@@ -39,11 +39,11 @@ export class GameRoom extends Room<StateHandler> {
                     this.hostId=client.sessionId;
                     console.log("host =",this.hostId)
                 }
-                this.respawnPlayer(player);
+                this.respawnPlayer(player, 0);
                 this.state.players.set(client.sessionId, player);
                 if (this.state.players.size === 4) {
                     this.state.stage = 'running';
-                    this.state.players.forEach(this.respawnPlayer);
+                    this.respawnPlayers();
                 }
                 break;
             case 'running':
@@ -94,7 +94,7 @@ export class GameRoom extends Room<StateHandler> {
                 });
 
                 if (respawn ){
-                    this.state.players.forEach(this.respawnPlayer);
+                    this.respawnPlayers();
                     respawn = false;
                 }
                 break;
@@ -154,13 +154,22 @@ export class GameRoom extends Room<StateHandler> {
     onDispose () {
     }
 
-    respawnPlayer = (player: Player) => {
-        let i = Math.floor((Math.random() * this.collision.map.spawns.length));
+    respawnPlayer = (player: Player, position: number) => {
+        // Math.floor((Math.random() * this.collision.map.spawns.length))
+        let i = position;
         player.position.x = this.collision.map.spawns[i].x;
         player.position.y = 0;
         player.position.z = this.collision.map.spawns[i].z;
         player.position.heading = 0;
         player.animation = null;
+    }
+
+    respawnPlayers = () => {
+        let i = 0;
+        for (var [key, value] of this.state.players) {
+            this.respawnPlayer(value, i % this.collision.map.spawns.length);
+            ++i;
+        }
     }
 
     hasReachedTarget = () => {
