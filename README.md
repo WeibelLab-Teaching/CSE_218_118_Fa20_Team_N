@@ -146,7 +146,7 @@ This project was developed between October and December 2020 by Team N for the j
 
 Our team is composed of:
 
-- **Jocelyn Alvarez**,
+- **Jocelyn Alvarez**, B.S. in Computer Engineering(Winter '21), Bay Area Native, interested in data science, full-stack developing and espresso based drinks. 
 - **Arnold De Guzman**, B.S. in Computer Engineering (UCSD Class of 2021), born in the Philippines and raised in San Diego. Interested in computer graphics and solving puzzles
 - **Fan Jin**, M.S in computer science (UCSD class of 2021), born and raised in China and earned bachelor’s degree from Tsinghua. After graduation, he will become a software engineer at Amazon in Seattle. He loves music and traveling
 - **Alberto Nencioni**, M.S. in Computer Science (UCSD Class of 2022) with specialization in Systems; born and raised in Italy, he moved to the U.S. for his undergraduate at UCSD, which he completed in 2020
