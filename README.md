@@ -18,12 +18,13 @@ This is why we decided to build a game that would allow people to find something
 
 Here you can see two storyboards to represent the core features of our application: a user walking around the maze, the ability to communicate with the other players, and the landmarks inside and outside of the maze.
 
+Users can enter and walk around the maze to find the rest of the team and reach the exit.
 ![Storyboard 1](./readme_pics/storyboard1.png)
+
+Users can communicate with the rest of the team and look at the landmarks to find their way through the maze.
 ![Storyboard 2](./readme_pics/storyboard2.png)
 
 ### Features
-
-TODO ADD PICTURES
 
 - A basic environment with a maze
 - A menu to start the game
@@ -34,23 +35,47 @@ TODO ADD PICTURES
 - Users spawn in different spots of the maze
 - The maze has landmarks to aid the players
 
+![Start Menu](./readme_pics/startmenu.png)
+
+![Player 1](./readme_pics/player1.png)
+
+![Player 2](./readme_pics/player2.png)
+
+![Landmark](./readme_pics/landmark.png)
+
 ### Architecture and Data Flow
 
 This project uses Babylon.js to render the game environment, and Colyseus for the multiplayer game logic. The audio communication is implemented using WebRTC.
 
-TODO ADD FIRST DIAGRAM
+![Architecture Diagram](./readme_pics/architecture.png)
 
 On the server side, we have two servers both running on Node.js. We have a game server consisting of two modules, one module providing audio chat functionality with WebRTC, the other one implementing the game logic with Colyseus. Colyseus is a framework that provides state synchronization between different clients. The second server is the web server, which simply hosts the client's JavaScript code. Both servers are hosted on the same Amazon EC2 instance when demoing remotely.
 
 Both client and server code is written in TypeScript.
 
-TODO ADD SECOND DIAGRAM
+![Dataflow Diagram](./readme_pics/dataflow.png)
 
 The client (user) sits in the middle of the data flow. For the audio chat part, the clients will send a WebRTC signal to the WebRTC server, which will respond with the other clients' port and address information. Then, the clients will establish a peer-to-peer connection with each other, without further need to talk to the WebRTC server. For the game state synchronization part, the clients will post their actions (e.g. keyboard presses) to the Colyseus server, which runs the game logic. The server will then calculate the new state and push it to the clients. It is important to note there is only one authoritative game logic running on the server: the action is going one-direction from client(s) to server, the updated state is also going one-direction from server to clients.
 
 ## How to get started
 
-TODO ADD LINKS TO REPOSITORY STRUCTURE + MAIN COMPONENTS. NEED REFACTORING TO BE DONE BEFORE EDITING
+Our repository structure is divided into two main directories:
+- [server](./server)
+- [client](./client)
+The [readme_pics](./readme_pics) directory just contains the pictures rendered in this README.
+
+Both the `server` and `client` directories have their own `package.json` as they are two environments saparate from each other, as outlined in the architecture diagrams.
+
+The relevant files of `server` are all stored in `server/src`:
+- [index.ts](./server/src/index.ts) - the main driver for the server code
+- [assets/](./server/src/assets) - the graphic components of the game, like the maze itself, the avatars used to represent the players, and the landmarks
+- [audio/Signaling.ts](./server/src/audio/Signaling.ts) - the WebRTC logic
+- [collision/Collision.ts](./server/src/collision/Collision.ts) - the logic for collision detection (when a player collides against a wall)
+- [entities/Player.ts](./server/src/entities/Player.ts) - stores the properties of a player (like its coordinates)
+- [rooms/](./server/src/rooms/) - contains the main game room logic inside `GameRoom.ts`, and defines the game room states inside `StateHandler.ts`
+
+Equivalently, the main files of `client` are all stored in `client/src`:
+
 
 ### How to run locally
 

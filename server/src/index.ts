@@ -6,7 +6,7 @@ import { Server } from "colyseus";
 
 import { GameRoom } from "./rooms/GameRoom";
 
-import { initWebRTC } from "./audio/signaling";
+import { initWebRTC } from "./audio/Signaling";
 
 export const port = process.env.PORT || 2657;
 
