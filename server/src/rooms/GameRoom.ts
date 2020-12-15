@@ -58,6 +58,7 @@ export class GameRoom extends Room<StateHandler> {
     }
 
     onUpdate () {
+        console.info(this.state);
         switch(this.state.stage) {
             case 'waiting':
                 var respawn = false;
@@ -121,9 +122,11 @@ export class GameRoom extends Room<StateHandler> {
                 if (this.hasReachedTarget()) {
                     this.state.stage = 'winning';
                     setTimeout(() => {
+                        //
                         this.state.stage = 'waiting';
-                        this.state.players.forEach(this.respawnPlayer);
-                    }, 10000);
+                        // this.state.players.forEach(this.respawnPlayer);
+                        this.state.players.clear();
+                    }, 3000);
                 }
                 break;
             case 'winning':
