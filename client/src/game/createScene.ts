@@ -168,28 +168,28 @@ export function createScene(canvas, engine){
             var text1 = new GUI.TextBlock();
             var text2 = new GUI.TextBlock();
             
-            if (state.stage == 'waiting') {
-                // advancedTexture1.removeControl(text1)
-                text1.text = "Waiting state..";
-                text1.color = "green";
-                text1.fontSize = 36;
-                advancedTexture1.addControl(text1);
-            } 
-             if (state.stage == 'running') {
-                advancedTexture1.removeControl(text1)
-                text2.text = "Running state..";
-                text2.color = "red";
-                text2.verticalAlignment= GUI.Control.VERTICAL_ALIGNMENT_TOP;
-                text2.fontSize = 36;
-                advancedTexture1.addControl(text2); 
-            }
-            // if (state.stage == 'winning') {
-            //     advancedTexture1.removeControl(text1)
-            //     text1.text = "Congratualtions!\nYou made it!\nHave a nice holiday!";
+            // if (state.stage == 'waiting') {
+            //     // advancedTexture1.removeControl(text1)
+            //     text1.text = "Waiting state..";
             //     text1.color = "green";
             //     text1.fontSize = 36;
-            //     advancedTexture1.addControl(text1); 
+            //     advancedTexture1.addControl(text1);
             // } 
+            //  if (state.stage == 'running') {
+            //     advancedTexture1.removeControl(text1)
+            //     text2.text = "Running state..";
+            //     text2.color = "red";
+            //     text2.verticalAlignment= GUI.Control.VERTICAL_ALIGNMENT_TOP;
+            //     text2.fontSize = 36;
+            //     advancedTexture1.addControl(text2); 
+            // }
+            if (state.stage == 'winning') {
+                advancedTexture1.removeControl(text1)
+                text1.text = "Congratualtions!\nYou made it!\nHave a nice holiday!";
+                text1.color = "green";
+                text1.fontSize = 36;
+                advancedTexture1.addControl(text1); 
+            } 
         
         });
         room.state.players.onChange = (player, key) => {
