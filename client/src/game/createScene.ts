@@ -294,8 +294,19 @@ function loadLandmarks(scene, tempLMPath){
         function(newMeshes){
             newMeshes.forEach(function(mesh){
                 //mesh.rotation = new BABYLON.Vector3(-3.14/2, 0 , 0);
-                //mesh.scaling = new BABYLON.Vector3(0.8,0.8,0.8);
-                mesh.position = new BABYLON.Vector3(-37.358, 0, -47.158);
+                mesh.scaling = new BABYLON.Vector3(0.3,0.3,0.3);
+                mesh.position = new BABYLON.Vector3(-37.358, 0, -46.158);
+            })
+        } );
+    
+    var tower_2 = BABYLON.SceneLoader.ImportMesh("", tempLMPath, 
+        "goal_pillar.stl",
+        scene, 
+        function(newMeshes){
+            newMeshes.forEach(function(mesh){
+                //mesh.rotation = new BABYLON.Vector3(-3.14/2, 0 , 0);
+                mesh.scaling = new BABYLON.Vector3(0.3,0.3,0.3);
+                mesh.position = new BABYLON.Vector3(-37.358, 0, -36.524);
             })
         } );
 }
