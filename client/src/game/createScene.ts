@@ -30,7 +30,7 @@ export function createScene(canvas, engine){
 
     //consider UniversalCamera- 1st choice for fps, has collisions and can add many inputs
 
-    camera.applyGravity = true;
+    // camera.applyGravity = true;
 
     // This targets the camera to scene origin
     camera.setTarget(BABYLON.Vector3.Zero());
@@ -51,6 +51,7 @@ export function createScene(canvas, engine){
 
     //import maze from github, and add to scene
     var baseURL =  "https://raw.githubusercontent.com/WeibelLab-Teaching/CSE_218_118_Fa20_Team_N/main/server/src/assets/";
+    var baseUrl2 = "https://raw.githubusercontent.com/Jmalva/TeamN_Assets/main/";
     var mazeName1 = "mazes/thinMaze.glb";
     // landmark paths and names
     var lmpath = "landmarks/";
@@ -64,22 +65,37 @@ export function createScene(canvas, engine){
 	// brickMat.diffuseTexture.vOffset = 0.5;
 
 
-    var maze =BABYLON.SceneLoader.ImportMesh("", baseURL, mazeName1, scene, function(meshes){
+    var maze =BABYLON.SceneLoader.ImportMesh("", baseUrl2, 'thinMaze.glb', scene, function(meshes){
         // apply my own materials
-        // meshes[1].material = brickMat;
         meshes[1].checkCollisions = true;
-        scene.createDefaultEnvironment(); //default lights and texture
+        // meshes[1].material = brickMat;
+        // scene.createDefaultEnvironment(); //default lights and texture
     });
 
+    // meshTask.onSuccess = function(task){
+    //     // var material_02 = scene.getMaterialByName('mat').set = new BABYLON.Color3(0,0,1)
+    //     task.loadedMeshes[0].position = new BABYLON.Vector3(0,0,10);
+    //     task.loadedMeshes.forEach(meshes=>{
+    //         meshes.isVisible = true;
+    //         console.log(meshes.id)
+    //         meshes.position= new BABYLON.Vector3(0,0,0);
+    //         meshes.material = brickMat;
+    //         scene.addMesh(meshes);
+    //     })
+    // }
+    // meshTask.onError = function(task){
+    //     console.log('error')
+    // }
+    
     //Dialog for User to Know Available Actions
     playerControlMenu();
-
-
+    
+    
     // Ground material
     var tempLMPath = "https://raw.githubusercontent.com/WeibelLab-Teaching/CSE_218_118_Fa20_Team_N/ad-landmarks/server/src/assets/landmarks/";
-
+    
     loadLandmarks(scene);
-
+    
     // Our built-in 'ground' shape. Params: name, width, depth, subdivs, scene
     var ground = BABYLON.Mesh.CreateGround("ground1", 100, 100, 2, scene);
     var groundMat = new BABYLON.StandardMaterial("ground",scene);
