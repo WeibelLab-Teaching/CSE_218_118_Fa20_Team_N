@@ -26,7 +26,7 @@ export function createScene(canvas, engine){
 
     //consider UniversalCamera- 1st choice for fps, has collisions and can add many inputs
 
-    camera.applyGravity = true;
+    camera.applyGravity = false;
 
     // This targets the camera to scene origin
     camera.setTarget(BABYLON.Vector3.Zero());
@@ -235,7 +235,7 @@ export function createScene(canvas, engine){
 
 }
 function loadLandmarks(scene){
-    var tempLMPath = "https://raw.githubusercontent.com/WeibelLab-Teaching/CSE_218_118_Fa20_Team_N/ad-landmarks/server/src/assets/landmarks/";
+    var tempLMPath = "https://raw.githubusercontent.com/WeibelLab-Teaching/CSE_218_118_Fa20_Team_N/main/server/src/assets/landmarks/";
 
     var angel = BABYLON.SceneLoader.ImportMesh("", tempLMPath, 
         "angel.stl",
