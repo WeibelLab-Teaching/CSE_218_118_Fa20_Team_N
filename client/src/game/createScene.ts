@@ -99,12 +99,13 @@ export function createScene(canvas, engine){
     skybox.material = skyboxMaterial;
 
    
-    // assetsMan.load();
+    
 
     // Colyseus / Join Room
     client.joinOrCreate<StateHandler>("game").then(room => {
         const playerViews: {[id: string]: BABYLON.AbstractMesh} = {};
         console.log("New room state:", room.state.stage);
+        var currentRoomState = room.state.stage
 
         room.state.players.onAdd = function(player, key) {
             var Walk:BABYLON.Animatable;
@@ -164,8 +165,6 @@ export function createScene(canvas, engine){
 
         room.onStateChange((state) => {
             console.log("New room state:", state.toJSON());
-            var advancedTexture1 = GUI.AdvancedDynamicTexture.CreateFullscreenUI("UI");
-            var text1 = new GUI.TextBlock();
             // var text2 = new GUI.TextBlock();
             
             // if (state.stage == 'waiting') {
@@ -183,14 +182,16 @@ export function createScene(canvas, engine){
             //     text2.fontSize = 36;
             //     advancedTexture1.addControl(text2); 
             // }
-            if (state.stage == 'winning') {
+            if (state.stage == 'winning' && state.stage != currentRoomState) {
+                var advancedTexture1 = GUI.AdvancedDynamicTexture.CreateFullscreenUI("UI");
+                var text1 = new GUI.TextBlock();
                 advancedTexture1.removeControl(text1)
                 text1.text = "Congratualtions!\nYou made it!\nHave a nice holiday!";
                 text1.color = "green";
                 text1.fontSize = 36;
                 advancedTexture1.addControl(text1); 
             } 
-        
+            currentRoomState = state.stage;
         });
         room.state.players.onChange = (player, key) => {
             console.log(player, "have changes at", key);
