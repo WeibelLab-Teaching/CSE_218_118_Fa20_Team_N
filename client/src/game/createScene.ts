@@ -68,24 +68,9 @@ export function createScene(canvas, engine){
     var maze =BABYLON.SceneLoader.ImportMesh("", baseUrl2, 'thinMaze.glb', scene, function(meshes){
         // apply my own materials
         meshes[1].checkCollisions = true;
-        // meshes[1].material = brickMat;
-        // scene.createDefaultEnvironment(); //default lights and texture
+        
     });
 
-    // meshTask.onSuccess = function(task){
-    //     // var material_02 = scene.getMaterialByName('mat').set = new BABYLON.Color3(0,0,1)
-    //     task.loadedMeshes[0].position = new BABYLON.Vector3(0,0,10);
-    //     task.loadedMeshes.forEach(meshes=>{
-    //         meshes.isVisible = true;
-    //         console.log(meshes.id)
-    //         meshes.position= new BABYLON.Vector3(0,0,0);
-    //         meshes.material = brickMat;
-    //         scene.addMesh(meshes);
-    //     })
-    // }
-    // meshTask.onError = function(task){
-    //     console.log('error')
-    // }
     
     //Dialog for User to Know Available Actions
     playerControlMenu();
