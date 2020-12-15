@@ -188,7 +188,7 @@ export function createScene(canvas, engine){
             if (state.stage != currentRoomState) {
                 if (state.stage == 'winning' ) {
                     advancedTexture1.removeControl(text1)
-                    text1.text = "Congratualtions!\nYou made it!\nHave a nice holiday!";
+                    text1.text = "Congratulations!\nYou are amazeing!";
                     text1.color = "green";
                     text1.fontSize = 36;
                     advancedTexture1.addControl(text1);
