@@ -17,7 +17,7 @@ interface HeightMap {
     dat: Array<Array<number>>,
     spawns: Array<Position2D>,
     target: Position2D
-    landmarkpos: Array<Position2D>
+    //landmarkpos: Array<Position2D>
 }
 
 export class Collision {

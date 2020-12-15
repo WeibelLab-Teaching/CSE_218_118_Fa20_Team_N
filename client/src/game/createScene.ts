@@ -81,7 +81,7 @@ export function createScene(canvas, engine){
         } );
     */
 
-    loadLandmarks(scene);
+    loadLandmarks(scene, tempLMPath);
 
     //a different way to upload assets
     // var assetsMan = new BABYLON.AssetsManager(scene);
@@ -234,8 +234,8 @@ export function createScene(canvas, engine){
     });
 
 }
-function loadLandmarks(scene){
-    var tempLMPath = "https://raw.githubusercontent.com/WeibelLab-Teaching/CSE_218_118_Fa20_Team_N/main/server/src/assets/landmarks/";
+function loadLandmarks(scene, tempLMPath){
+    //var tempLMPath = "https://raw.githubusercontent.com/WeibelLab-Teaching/CSE_218_118_Fa20_Team_N/main/server/src/assets/landmarks/";
 
     var angel = BABYLON.SceneLoader.ImportMesh("", tempLMPath, 
         "angel.stl",
@@ -285,6 +285,17 @@ function loadLandmarks(scene){
                 mesh.rotation = new BABYLON.Vector3(-3.14/2, 0 , 0);
                 mesh.scaling = new BABYLON.Vector3(0.8,0.8,0.8);
                 mesh.position = new BABYLON.Vector3(-7.5, 0, -50);
+            })
+        } );
+
+    var tower_1 = BABYLON.SceneLoader.ImportMesh("", tempLMPath, 
+        "goal_pillar.stl",
+        scene, 
+        function(newMeshes){
+            newMeshes.forEach(function(mesh){
+                //mesh.rotation = new BABYLON.Vector3(-3.14/2, 0 , 0);
+                //mesh.scaling = new BABYLON.Vector3(0.8,0.8,0.8);
+                mesh.position = new BABYLON.Vector3(-37.358, 0, -47.158);
             })
         } );
 }
