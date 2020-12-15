@@ -39,6 +39,8 @@ Users can communicate with the rest of the team and look at the landmarks to fin
 
 ![Start Menu](./readme_pics/startmenu.png)
 
+![Overview](./readme_pics/overview.png)
+
 ![Player 1](./readme_pics/player1.png)
 
 ![Player 2](./readme_pics/player2.png)
