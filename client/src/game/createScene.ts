@@ -56,14 +56,14 @@ export function createScene(canvas, engine){
     var lmpath = "landmarks/";
     var internal_LMs = ["angel.stl", "nike.stl", "palm_tree.obj"];
     var external_LMs = ["eiffel_tower.stl", "pyramid.stl"];
-    
+
     var brickMat = new BABYLON.StandardMaterial("brick",scene);
     // brickMat.bumpTexture = new BABYLON.Texture("https://i.imgur.com/yn98ktz.png",scene);
     brickMat.diffuseTexture  = new BABYLON.Texture("https://i.imgur.com/yn98ktz.png",scene);
     brickMat.diffuseTexture.scale(3);
 	// brickMat.diffuseTexture.vOffset = 0.5;
 
-    
+
     var maze =BABYLON.SceneLoader.ImportMesh("", baseURL, mazeName1, scene, function(meshes){
         // apply my own materials
         // meshes[1].material = brickMat;
@@ -79,7 +79,7 @@ export function createScene(canvas, engine){
     var tempLMPath = "https://raw.githubusercontent.com/WeibelLab-Teaching/CSE_218_118_Fa20_Team_N/ad-landmarks/server/src/assets/landmarks/";
 
     loadLandmarks(scene);
-    
+
     // Our built-in 'ground' shape. Params: name, width, depth, subdivs, scene
     var ground = BABYLON.Mesh.CreateGround("ground1", 100, 100, 2, scene);
     var groundMat = new BABYLON.StandardMaterial("ground",scene);
@@ -98,8 +98,8 @@ export function createScene(canvas, engine){
     skyboxMaterial.specularColor = new BABYLON.Color3(0, 0, 0);
     skybox.material = skyboxMaterial;
 
-   
-    
+
+
 
     // Colyseus / Join Room
     client.joinOrCreate<StateHandler>("game").then(room => {
@@ -131,7 +131,7 @@ export function createScene(canvas, engine){
                     playerViews[key].position.set(player.position.x, player.position.y, player.position.z);
                     playerViews[key].rotation.set(0, player.position.heading, 0);
                 }
-    
+
                 if (Walk != null) {
                     if (player.animation == ANIMATE.WALK) {
                         Walk.restart();
@@ -140,12 +140,12 @@ export function createScene(canvas, engine){
                     }
                 }
                 if (key === room.sessionId) {
-                    var dist = 0.1;
+                    var dist = 0.05;
                     var x = player.position.x + dist * Math.sin(player.position.heading);
                     var z = player.position.z + dist * Math.cos(player.position.heading);
-                    camera.position.set(x, player.position.y + 5, z);
+                    camera.position.set(x, player.position.y + 4, z);
                     camera.rotation.set(0, player.position.heading + Math.PI, 0);
-    
+
                 }
             };
 
@@ -166,21 +166,21 @@ export function createScene(canvas, engine){
         room.onStateChange((state) => {
             // console.log("New room state:", state.toJSON());
             // var text2 = new GUI.TextBlock();
-            
+
             // if (state.stage == 'waiting') {
             //     // advancedTexture1.removeControl(text1)
             //     text1.text = "Waiting state..";
             //     text1.color = "green";
             //     text1.fontSize = 36;
             //     advancedTexture1.addControl(text1);
-            // } 
+            // }
             //  if (state.stage == 'running') {
             //     advancedTexture1.removeControl(text1)
             //     text2.text = "Running state..";
             //     text2.color = "red";
             //     text2.verticalAlignment= GUI.Control.VERTICAL_ALIGNMENT_TOP;
             //     text2.fontSize = 36;
-            //     advancedTexture1.addControl(text2); 
+            //     advancedTexture1.addControl(text2);
             // }
             if (state.stage == 'winning' && state.stage != currentRoomState) {
                 var advancedTexture1 = GUI.AdvancedDynamicTexture.CreateFullscreenUI("UI");
@@ -189,8 +189,8 @@ export function createScene(canvas, engine){
                 text1.text = "Congratualtions!\nYou made it!\nHave a nice holiday!";
                 text1.color = "green";
                 text1.fontSize = 36;
-                advancedTexture1.addControl(text1); 
-            } 
+                advancedTexture1.addControl(text1);
+            }
             // advancedTexture1.removeControl(text1)
             currentRoomState = state.stage;
 
@@ -211,7 +211,7 @@ export function createScene(canvas, engine){
                 keyboard.animate = ANIMATE.WALK;
             } else if (e.which === Keycode.S) {
                 keyboard.move = 1;
-            } 
+            }
             else if (e.which === Keycode.M){
                 keyboard.start = 1;
             }
@@ -244,7 +244,7 @@ export function createScene(canvas, engine){
     });
 
      //collisions..
-     scene.collisionsEnabled = true; 
+     scene.collisionsEnabled = true;
      camera.checkCollisions = true;
      ground.checkCollisions = true;
 
@@ -257,9 +257,9 @@ export function createScene(canvas, engine){
 function loadLandmarks(scene){
     var tempLMPath = "https://raw.githubusercontent.com/WeibelLab-Teaching/CSE_218_118_Fa20_Team_N/ad-landmarks/server/src/assets/landmarks/";
 
-    var angel = BABYLON.SceneLoader.ImportMesh("", tempLMPath, 
+    var angel = BABYLON.SceneLoader.ImportMesh("", tempLMPath,
         "angel.stl",
-        scene, 
+        scene,
         function(newMeshes){
             newMeshes.forEach(function(mesh){
                 mesh.scaling = new BABYLON.Vector3(0.05,0.05,0.05);
@@ -267,9 +267,9 @@ function loadLandmarks(scene){
             })
         } );
 
-    var nike = BABYLON.SceneLoader.ImportMesh("", tempLMPath, 
+    var nike = BABYLON.SceneLoader.ImportMesh("", tempLMPath,
         "nike.stl",
-        scene, 
+        scene,
         function(newMeshes){
             newMeshes.forEach(function(mesh){
                 mesh.scaling = new BABYLON.Vector3(0.04,0.04,0.04);
@@ -277,9 +277,9 @@ function loadLandmarks(scene){
             })
         } );
 
-    var palm = BABYLON.SceneLoader.ImportMesh("", tempLMPath, 
+    var palm = BABYLON.SceneLoader.ImportMesh("", tempLMPath,
         "palm_tree.obj",
-        scene, 
+        scene,
         function(newMeshes){
             newMeshes.forEach(function(mesh){
                 mesh.scaling = new BABYLON.Vector3(0.5,0.5,0.5);
@@ -287,19 +287,19 @@ function loadLandmarks(scene){
             })
         } );
 
-    var pyramid = BABYLON.SceneLoader.ImportMesh("", tempLMPath, 
+    var pyramid = BABYLON.SceneLoader.ImportMesh("", tempLMPath,
         "pyramid.stl",
-        scene, 
+        scene,
         function(newMeshes){
             newMeshes.forEach(function(mesh){
-                
+
                 mesh.position = new BABYLON.Vector3(5.06, 0, 100);
             })
         } );
-    
-    var tower = BABYLON.SceneLoader.ImportMesh("", tempLMPath, 
+
+    var tower = BABYLON.SceneLoader.ImportMesh("", tempLMPath,
         "eiffel_tower.stl",
-        scene, 
+        scene,
         function(newMeshes){
             newMeshes.forEach(function(mesh){
                 mesh.rotation = new BABYLON.Vector3(-3.14/2, 0 , 0);
