@@ -1,0 +1,44 @@
+Exporter version: 6.4.5, Blender version: 2.90.1
+========= Conversion from Blender to Babylon.js =========
+	Scene settings used :
+		Inline textures     :  false
+		Material Type       :  PBR
+		Positions Precision :  4
+		Normals Precision   :  3
+		UVs Precision       :  3
+		Vert Color Precision:  3
+		Mat Weight Precision:  2
+		Keep Z-up r-handed  :  no
+		Texture directory   :  C:\Users\jocelyn\Desktop\.cse218-118\CSE_218_118_Fa20_Team_N\server\src\assets\
+	Python World class constructor completed
+	WARNING: No active camera has been assigned, or is not in a currently selected Blender layer
+	processing begun of node:  Light
+	processing begun of mesh:  Plane
+		processing begun of material:  brick.001
+		processing begun of material:  stone
+			WARNING: unsupported node type(ShaderNodeTexBrick) will trigger baking
+		processing begun of material:  exit
+			WARNING: Metal channel baking required, but not possible, ignored
+			WARNING: Roughness channel baking required, but not possible, ignored
+			WARNING: Refraction channel baking required, but not possible, ignored
+			Baking texture, type: DIFFUSE, mapped using: BakingUV
+			processing texture Plane_baked_DIFFUSE
+				texture type:  diffuseTexture, mapped using: "BakingUV"
+			Baking texture, type: GLOSSY, mapped using: BakingUV
+			processing texture Plane_baked_GLOSSY
+				texture type:  specularTexture, mapped using: "BakingUV"
+			bake time:  0 min, 21.5534 secs
+		Custom split normals with tangents being used
+		num positions      :  2161
+		num normals        :  2161
+		num tangents       :  8644
+		num uvs            :  4322
+		num uvs2           :  0
+		num colors         :  0
+		num triangles      :  1554
+	processing begun of node:  Light.001
+========= Writing of JSON file started =========
+	writing mesh:  Plane
+========= Writing of JSON file completed =========
+========= end of processing =========
+elapsed time:  0 min, 21.8133 secs
