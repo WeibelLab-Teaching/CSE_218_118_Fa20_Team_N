@@ -4,6 +4,8 @@
 
 This project is a multiplayer game where players work together to find their way inside a maze. They can use the landmarks placed inside and around the maze as points of reference to help with directions; they can also communicate with each other via audio chat to share information.
 
+**TO ACCESS THE APP, GO HERE: http://34.222.71.238:8080**
+
 ## What we wanted to accomplish
 
 When presented with the task to come up with a project idea in October 2020, we were in the middle of the COVID-19 pandemic. We looked at our experiences dealing with the situation, and we realized a few things:
