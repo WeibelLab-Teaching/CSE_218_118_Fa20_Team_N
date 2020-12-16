@@ -14,6 +14,9 @@ const PORT = process.env.PORT || 2658;
 /*************/
 
 const app = express();
+
+app.use(cors());
+
 var server = http.createServer(app)
 // var io  = socketio.listen(server);
 let io = require("socket.io")(server, {
