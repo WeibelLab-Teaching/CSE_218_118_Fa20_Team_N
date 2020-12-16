@@ -4,7 +4,7 @@
 
 This project is a multiplayer game where players work together to find their way inside a maze. They can use the landmarks placed inside and around the maze as points of reference to help with directions; they can also communicate with each other via audio chat to share information.
 
-**TO ACCESS THE APP, GO HERE: http://34.222.71.238:8080**
+**TO ACCESS THE APP, GO HERE: https://amazeingclient.herokuapp.com**
 
 ## What we wanted to accomplish
 
@@ -65,6 +65,8 @@ Both client and server code is written in TypeScript.
 The client (user) sits in the middle of the data flow. For the audio chat part, the clients will send a WebRTC signal to the WebRTC server, which will respond with the other clients' port and address information. Then, the clients will establish a peer-to-peer connection with each other, without further need to talk to the WebRTC server. For the game state synchronization part, the clients will post their actions (e.g. keyboard presses) to the Colyseus server, which runs the game logic. The server will then calculate the new state and push it to the clients. It is important to note there is only one authoritative game logic running on the server: the action is going one-direction from client(s) to server, the updated state is also going one-direction from server to clients.
 
 ## How to get started
+
+**TO ACCESS THE APP, GO HERE: https://amazeingclient.herokuapp.com**
 
 Our repository structure is divided into two main directories:
 
