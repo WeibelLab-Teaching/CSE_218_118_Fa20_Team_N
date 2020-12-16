@@ -1,6 +1,5 @@
 /** CONFIG **/
-// var SIGNALING_SERVER = "http://localhost:2658";
-var SIGNALING_SERVER = location.protocol + '//' + location.hostname + ':2658';
+import { AUDIO_ENDPOINT } from '../game/network';
 var USE_AUDIO = true;
 var USE_VIDEO = false;
 var DEFAULT_CHANNEL = 'some-global-channel-name';
@@ -28,7 +27,7 @@ let attachMediaStream = function(element, stream) {
 
 export function audio_init() {
     console.log("Connecting to signaling server");
-    signaling_socket = io(SIGNALING_SERVER);
+    signaling_socket = io(AUDIO_ENDPOINT);
     // signaling_socket = io();
 
     signaling_socket.on('connect', function() {
