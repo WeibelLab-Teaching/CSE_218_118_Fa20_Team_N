@@ -18,7 +18,12 @@ const app = express();
 var server = http.createServer(app)
 // var io  = socketio.listen(server);
 let io = require("socket.io")(server, {
-    cors: {}
+    cors: {
+        "origin": "*",
+        "methods": "GET,HEAD,PUT,PATCH,POST,DELETE",
+        "preflightContinue": false,
+        "optionsSuccessStatus": 204
+    }
 });
 //io.set('log level', 2);
 
