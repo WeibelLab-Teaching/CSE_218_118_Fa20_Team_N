@@ -11,8 +11,8 @@ import {name} from './displayName';
 
 // Re-using server-side types for networking
 // This is optional, but highly recommended
-import { StateHandler } from "../../../server/src/rooms/StateHandler";
-import { PressedKeys } from "../../../server/src/entities/Player";
+import { StateHandler } from "../types/StateHandler";
+import { PressedKeys } from "../types/Player";
 import { Vector2, Vector3 } from "babylonjs";
 import 'babylonjs-loaders';
 import { text } from "body-parser";
@@ -68,19 +68,19 @@ export function createScene(canvas, engine){
     var maze =BABYLON.SceneLoader.ImportMesh("", baseUrl2, 'thinMaze.glb', scene, function(meshes){
         // apply my own materials
         meshes[1].checkCollisions = true;
-        
+
     });
 
-    
+
     //Dialog for User to Know Available Actions
     playerControlMenu();
-    
-    
+
+
     // Ground material
     var tempLMPath = "https://raw.githubusercontent.com/WeibelLab-Teaching/CSE_218_118_Fa20_Team_N/ad-landmarks/server/src/assets/landmarks/";
-    
+
     loadLandmarks(scene);
-    
+
     // Our built-in 'ground' shape. Params: name, width, depth, subdivs, scene
     var ground = BABYLON.Mesh.CreateGround("ground1", 100, 100, 2, scene);
     var groundMat = new BABYLON.StandardMaterial("ground",scene);
@@ -204,7 +204,7 @@ export function createScene(canvas, engine){
                     advancedTexture1.addControl(text1);
                 }
             }
-            
+
             // advancedTexture1.removeControl(text1)
             currentRoomState = state.stage;
 
